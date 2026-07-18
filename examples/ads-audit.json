@@ -1,0 +1,49 @@
+{
+  "profile": "max-unity",
+  "severityOverrides": {
+    "MAX092": "critical"
+  },
+  "maxUnity": {
+    "minimumUnityVersion": "2021.3",
+    "minimumMaxPluginVersion": "8.0.0",
+    "android": {
+      "minimumApi": 24,
+      "targetApiAtLeast": 35,
+      "requireJetifier": true
+    },
+    "ios": {
+      "minimumDeploymentTarget": "13.0",
+      "requireAttDescription": true,
+      "requireSkanIds": true
+    },
+    "requiredNetworks": [
+      "google-admob",
+      "unity-ads",
+      "ironsource",
+      "meta",
+      "mintegral",
+      "pangle"
+    ],
+    "analyticsRevenueSinksMode": "recognized",
+    "analyticsRevenueSinks": [
+      "firebase",
+      "appsflyer",
+      "adjust"
+    ],
+    "apiAliases": {
+      "Interstitial.Show": ["GameAds.ShowInterstitial"],
+      "Interstitial.Ready": ["GameAds.CanShowInterstitial"],
+      "Rewarded.Show": ["GameAds.ShowRewarded"],
+      "Rewarded.Ready": ["GameAds.CanShowRewarded"],
+      "Revenue.AnalyticsSink": ["ProjectAnalytics.TrackAdRevenue"]
+    },
+    "requirements": {
+      "consentFlow": true,
+      "attDescription": true,
+      "skanIds": true,
+      "revenueTracking": true,
+      "qualityService": false,
+      "childDirectedFlags": false
+    }
+  }
+}

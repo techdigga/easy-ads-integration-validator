@@ -1,0 +1,1428 @@
+{
+  "schemaVersion": "1.0",
+  "tool": "easy-ads-validator",
+  "version": "0.1.0-beta.1",
+  "profile": "max-unity",
+  "project": {
+    "rootPath": ".",
+    "displayName": "valid-max-basic",
+    "isUnityProject": true
+  },
+  "scan": {
+    "startedAt": "2026-07-18T17:03:29.499953+00:00",
+    "toolVersion": "0.1.0-beta.1",
+    "profileId": "max-unity",
+    "includePasses": true,
+    "failOn": "fail",
+    "verbose": false,
+    "reportDetail": "compact",
+    "maxEvidencePerFinding": null,
+    "summaryOnly": false
+  },
+  "summary": {
+    "passCount": 23,
+    "failCount": 0,
+    "warnCount": 12,
+    "unknownCount": 9,
+    "internalWarnCount": 0,
+    "isPartial": false,
+    "meetsFailureThreshold": false,
+    "score": {
+      "value": 75,
+      "grade": "C",
+      "categories": [
+        {
+          "category": "sdkimport",
+          "passCount": 3,
+          "nonPassCount": 0,
+          "totalCount": 3,
+          "completionPercent": 100
+        },
+        {
+          "category": "platformsettings",
+          "passCount": 2,
+          "nonPassCount": 3,
+          "totalCount": 5,
+          "completionPercent": 40
+        },
+        {
+          "category": "initialization",
+          "passCount": 6,
+          "nonPassCount": 2,
+          "totalCount": 8,
+          "completionPercent": 75
+        },
+        {
+          "category": "consent",
+          "passCount": 3,
+          "nonPassCount": 3,
+          "totalCount": 6,
+          "completionPercent": 50
+        },
+        {
+          "category": "dependencies",
+          "passCount": 3,
+          "nonPassCount": 2,
+          "totalCount": 5,
+          "completionPercent": 60
+        },
+        {
+          "category": "callbacks",
+          "passCount": 3,
+          "nonPassCount": 2,
+          "totalCount": 5,
+          "completionPercent": 60
+        },
+        {
+          "category": "loading",
+          "passCount": 1,
+          "nonPassCount": 4,
+          "totalCount": 5,
+          "completionPercent": 20
+        },
+        {
+          "category": "revenue",
+          "passCount": 1,
+          "nonPassCount": 3,
+          "totalCount": 4,
+          "completionPercent": 25
+        },
+        {
+          "category": "productionsafety",
+          "passCount": 1,
+          "nonPassCount": 2,
+          "totalCount": 3,
+          "completionPercent": 33
+        }
+      ]
+    },
+    "triage": {
+      "criticalIssueCount": 0,
+      "highIssueCount": 5,
+      "manualReviewCount": 0,
+      "unknownCount": 9
+    }
+  },
+  "findings": [
+    {
+      "id": "MAX013",
+      "title": "ATT usage description is configured",
+      "category": "consent",
+      "status": "WARN",
+      "severity": "high",
+      "confidence": "medium",
+      "message": "ATT usage description evidence was not found.",
+      "evidence": [],
+      "remediation": "Add NSUserTrackingUsageDescription to committed iOS plist/postprocess configuration when ATT is required.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX014",
+      "title": "SKAdNetwork IDs are configured",
+      "category": "platformsettings",
+      "status": "WARN",
+      "severity": "high",
+      "confidence": "medium",
+      "message": "Committed SKAdNetwork ID evidence was not found.",
+      "evidence": [],
+      "remediation": "Commit SKAdNetwork identifiers or deterministic iOS postprocess evidence for required mediated networks.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX021",
+      "title": "Google AdMob app IDs are configured when required",
+      "category": "platformsettings",
+      "status": "WARN",
+      "severity": "high",
+      "confidence": "medium",
+      "message": "Policy requires Google/AdMob mediation but app ID evidence was not found.",
+      "evidence": [],
+      "remediation": "Add Android and iOS Google Mobile Ads app IDs to committed platform configuration when AdMob is enabled.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX022",
+      "title": "Ad unit IDs are present and organized",
+      "category": "initialization",
+      "status": "WARN",
+      "severity": "high",
+      "confidence": "medium",
+      "message": "Ad unit ID evidence was not found.",
+      "evidence": [],
+      "remediation": "Declare MAX ad unit IDs in committed configuration or application code, organized by ad format.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX081",
+      "title": "Revenue callback forwards to configured analytics sinks",
+      "category": "revenue",
+      "status": "WARN",
+      "severity": "high",
+      "confidence": "medium",
+      "message": "Revenue callback exists but no configured analytics sink evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 27,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
+        }
+      ],
+      "remediation": "Forward MAX impression revenue to a configured analytics sink or update analyticsRevenueSinks policy.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX032",
+      "title": "MAX initialization is guarded",
+      "category": "initialization",
+      "status": "WARN",
+      "severity": "medium",
+      "confidence": "medium",
+      "message": "InitializeSdk does not appear guarded by local initialization state.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 10,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.InitializeSdk()"
+        }
+      ],
+      "remediation": "Guard MAX initialization so repeated lifecycle entry points cannot initialize the SDK more than once.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX042",
+      "title": "Privacy policy URL is configured",
+      "category": "consent",
+      "status": "WARN",
+      "severity": "medium",
+      "confidence": "medium",
+      "message": "Privacy policy URL/path evidence was not found.",
+      "evidence": [],
+      "remediation": "Configure a privacy policy URL in consent/privacy UI or committed app configuration.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX071",
+      "title": "Retry system exists for failed loads",
+      "category": "loading",
+      "status": "WARN",
+      "severity": "medium",
+      "confidence": "medium",
+      "message": "Load-failure callbacks exist but retry scheduling evidence was not found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 16,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 22,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent"
+        }
+      ],
+      "remediation": "Schedule bounded retries from failed load/display callbacks.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX073",
+      "title": "Video ads reload after close or fail callbacks",
+      "category": "loading",
+      "status": "WARN",
+      "severity": "medium",
+      "confidence": "medium",
+      "message": "Video ad use exists but reload-after-close/fail evidence was not found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 28,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadInterstitial()",
+          "role": "context"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 29,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadRewardedAd()",
+          "role": "context"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 36,
+          "column": 13,
+          "snippet": null,
+          "symbol": "MaxSdk.ShowInterstitial()",
+          "role": "context"
+        }
+      ],
+      "remediation": "Reload interstitial and rewarded ads from hidden/closed and load/display failure callbacks.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 3,
+        "shownCount": 3,
+        "omittedCount": 0
+      },
+      "unresolved": [
+        "No direct, scheduled, or terminal-named reload chain was proven from static C# evidence."
+      ]
+    },
+    {
+      "id": "MAX023",
+      "title": "Placement names are tracked",
+      "category": "revenue",
+      "status": "WARN",
+      "severity": "low",
+      "confidence": "medium",
+      "message": "MAX show calls do not include obvious placement names.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 36,
+          "column": 13,
+          "snippet": null,
+          "symbol": "MaxSdk.ShowInterstitial()"
+        }
+      ],
+      "remediation": "Pass placement names to MAX show calls or record equivalent placement metadata.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX074",
+      "title": "Ad type loading is staged after initialization",
+      "category": "loading",
+      "status": "WARN",
+      "severity": "low",
+      "confidence": "medium",
+      "message": "Ad load calls do not show obvious staging or delay.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 28,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadInterstitial()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 29,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadRewardedAd()"
+        }
+      ],
+      "remediation": "Consider staging initial ad loads to reduce startup contention.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX082",
+      "title": "Revenue payload includes important fields",
+      "category": "revenue",
+      "status": "WARN",
+      "severity": "low",
+      "confidence": "medium",
+      "message": "Revenue payload evidence may be missing fields: network, precision.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 27,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 27,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
+        }
+      ],
+      "remediation": "Include revenue, network, ad unit, placement, and precision where available in analytics payloads.",
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 4,
+        "shownCount": 4,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX003",
+      "title": "External Dependency Manager evidence exists",
+      "category": "dependencies",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "External Dependency Manager evidence is absent or not committed.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX004",
+      "title": "Android resolver settings are acceptable",
+      "category": "dependencies",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "Committed Android resolver settings were not found.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX012",
+      "title": "iOS deployment target meets policy",
+      "category": "platformsettings",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "iOS deployment target setting was not found.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX062",
+      "title": "Banner and MREC callbacks are wired when used",
+      "category": "callbacks",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "Banner/MREC use evidence is absent.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX063",
+      "title": "App open callbacks are wired when used",
+      "category": "callbacks",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "App open ad use evidence is absent.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX072",
+      "title": "Retry delay appears exponential or bounded",
+      "category": "loading",
+      "status": "UNKNOWN",
+      "severity": "medium",
+      "confidence": "low",
+      "message": "Retry scheduling evidence is absent.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX044",
+      "title": "Child-directed and age-related flags are considered",
+      "category": "consent",
+      "status": "UNKNOWN",
+      "severity": "low",
+      "confidence": "low",
+      "message": "Age-related privacy flag evidence was not found and is not required by default policy.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX090",
+      "title": "MAX Ad Review or quality service is configured",
+      "category": "productionsafety",
+      "status": "UNKNOWN",
+      "severity": "low",
+      "confidence": "low",
+      "message": "Ad quality service evidence was not found and is not required by default policy.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX091",
+      "title": "Creative Debugger is not disabled unexpectedly",
+      "category": "productionsafety",
+      "status": "UNKNOWN",
+      "severity": "low",
+      "confidence": "low",
+      "message": "Creative Debugger configuration evidence is absent.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX001",
+      "title": "MAX SDK is imported",
+      "category": "sdkimport",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "MAX import evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": "com.applovin.mediation.ads",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX020",
+      "title": "MAX SDK key is configured",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "MAX SDK key evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Plugins/Android/AndroidManifest.xml",
+          "line": 3,
+          "column": null,
+          "snippet": null,
+          "symbol": "meta-data"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX030",
+      "title": "MAX SDK is initialized",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "MaxSdk.InitializeSdk invocation was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 10,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.InitializeSdk()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX040",
+      "title": "Consent flow evidence exists",
+      "category": "consent",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "CMP/UMP/MAX consent evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 8,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.CmpService.ShowCmpForNewUser()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX080",
+      "title": "Ad revenue callback is wired",
+      "category": "revenue",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "MAX ad revenue callback evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 27,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX092",
+      "title": "Production debug and test hooks are not unconditional",
+      "category": "productionsafety",
+      "status": "PASS",
+      "severity": "critical",
+      "confidence": "high",
+      "message": "No unconditional MAX debug/test evidence was found.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX002",
+      "title": "MAX SDK version meets policy",
+      "category": "sdkimport",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "MAX plugin version meets the configured minimum.",
+      "evidence": [
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": "com.applovin.mediation.ads",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX010",
+      "title": "Android API levels meet policy",
+      "category": "platformsettings",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Android API levels and Jetifier setting meet policy.",
+      "evidence": [
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 2,
+          "column": null,
+          "snippet": "    minSdkVersion 24",
+          "symbol": null
+        },
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 3,
+          "column": null,
+          "snippet": "    targetSdkVersion 35",
+          "symbol": null
+        },
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 5,
+          "column": null,
+          "snippet": "android.enableJetifier=true",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 3,
+        "shownCount": 3,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX031",
+      "title": "MAX initialization is singular",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Exactly one InitializeSdk call was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 10,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.InitializeSdk()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX033",
+      "title": "MAX initialized callback is subscribed before initialization",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "MAX initialized callback subscription appears before InitializeSdk in the same method.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 9,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.OnSdkInitializedEvent"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX034",
+      "title": "Ad loading starts after initialization",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Ad loading appears on an initialized callback path.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 28,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadInterstitial()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 29,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadRewardedAd()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX041",
+      "title": "Consent is configured before MAX initialization",
+      "category": "consent",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Consent evidence appears before InitializeSdk in the same method.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 8,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.CmpService.ShowCmpForNewUser()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX050",
+      "title": "Required mediated networks are present",
+      "category": "dependencies",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "All policy-required mediated network evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": "com.applovin.mediation.ads",
+          "symbol": null
+        },
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 7,
+          "column": null,
+          "snippet": "    implementation \u0022google-admob unity-ads ironsource meta mintegral pangle\u0022",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX051",
+      "title": "Native dependencies are present for required networks",
+      "category": "dependencies",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Native dependency evidence was found for required networks.",
+      "evidence": [
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 7,
+          "column": null,
+          "snippet": "    implementation \u0022google-admob unity-ads ironsource meta mintegral pangle\u0022",
+          "symbol": null
+        },
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": "com.applovin.mediation.ads",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 2,
+        "shownCount": 2,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX052",
+      "title": "Mediated SDKs are not manually initialized",
+      "category": "dependencies",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "No known manual initialization calls for MAX-mediated SDKs were found.",
+      "evidence": [],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 0,
+        "shownCount": 0,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX061",
+      "title": "Rewarded callbacks are wired",
+      "category": "callbacks",
+      "status": "PASS",
+      "severity": "high",
+      "confidence": "high",
+      "message": "Core rewarded callback evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 21,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdLoadedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 22,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 23,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdDisplayedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 24,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdHiddenEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 25,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdClickedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 26,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 27,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 7,
+        "shownCount": 7,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX005",
+      "title": "Unity version meets policy",
+      "category": "sdkimport",
+      "status": "PASS",
+      "severity": "medium",
+      "confidence": "high",
+      "message": "Unity version meets the configured minimum.",
+      "evidence": [
+        {
+          "filePath": "ProjectSettings/ProjectVersion.txt",
+          "line": null,
+          "column": null,
+          "snippet": null,
+          "symbol": null
+        },
+        {
+          "filePath": "Assets",
+          "line": null,
+          "column": null,
+          "snippet": null,
+          "symbol": null
+        },
+        {
+          "filePath": "ProjectSettings",
+          "line": null,
+          "column": null,
+          "snippet": null,
+          "symbol": null
+        },
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": null,
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 4,
+        "shownCount": 4,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX011",
+      "title": "Android Gradle settings are compatible",
+      "category": "platformsettings",
+      "status": "PASS",
+      "severity": "medium",
+      "confidence": "high",
+      "message": "Android Gradle settings evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Plugins/Android/mainTemplate.gradle",
+          "line": 5,
+          "column": null,
+          "snippet": "android.enableJetifier=true",
+          "symbol": null
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX060",
+      "title": "Interstitial callbacks are wired",
+      "category": "callbacks",
+      "status": "PASS",
+      "severity": "medium",
+      "confidence": "high",
+      "message": "Core interstitial callback evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 15,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdLoadedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 16,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 17,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdDisplayedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 18,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdHiddenEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 19,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdClickedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 6,
+        "shownCount": 6,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX064",
+      "title": "Callback subscriptions are not duplicated",
+      "category": "callbacks",
+      "status": "PASS",
+      "severity": "medium",
+      "confidence": "high",
+      "message": "No duplicate MAX callback subscriptions were found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 9,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.OnSdkInitializedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 15,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdLoadedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 16,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdLoadFailedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 17,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdDisplayedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 18,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdHiddenEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 19,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdClickedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 20,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 21,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdLoadedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 22,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdLoadFailedEvent"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 23,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdkCallbacks.Rewarded.OnAdDisplayedEvent"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 14,
+        "shownCount": 10,
+        "omittedCount": 4
+      }
+    },
+    {
+      "id": "MAX070",
+      "title": "Show calls are guarded by readiness checks",
+      "category": "loading",
+      "status": "PASS",
+      "severity": "medium",
+      "confidence": "high",
+      "message": "MAX show calls have local readiness guards.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 36,
+          "column": 13,
+          "snippet": null,
+          "symbol": "MaxSdk.ShowInterstitial()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX035",
+      "title": "MAX APIs appear on main thread path",
+      "category": "initialization",
+      "status": "PASS",
+      "severity": "low",
+      "confidence": "high",
+      "message": "MAX API calls do not obviously appear on background-thread paths.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 8,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.CmpService.ShowCmpForNewUser()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 10,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.InitializeSdk()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 28,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadInterstitial()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 29,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.LoadRewardedAd()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 34,
+          "column": 13,
+          "snippet": null,
+          "symbol": "MaxSdk.IsInterstitialReady()"
+        },
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 36,
+          "column": 13,
+          "snippet": null,
+          "symbol": "MaxSdk.ShowInterstitial()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 6,
+        "shownCount": 6,
+        "omittedCount": 0
+      }
+    },
+    {
+      "id": "MAX043",
+      "title": "Existing-user privacy settings path exists",
+      "category": "consent",
+      "status": "PASS",
+      "severity": "low",
+      "confidence": "high",
+      "message": "Existing-user privacy settings evidence was found.",
+      "evidence": [
+        {
+          "filePath": "Assets/Scripts/AdsManager.cs",
+          "line": 8,
+          "column": 9,
+          "snippet": null,
+          "symbol": "MaxSdk.CmpService.ShowCmpForNewUser()"
+        }
+      ],
+      "remediation": null,
+      "docsUrl": null,
+      "ruleVersion": "1.0.0",
+      "evidenceSummary": {
+        "totalCount": 1,
+        "shownCount": 1,
+        "omittedCount": 0
+      }
+    }
+  ],
+  "diagnostics": [],
+  "limitations": [
+    "Static analysis only. Runtime behavior, dashboard setup, and legal compliance are not verified."
+  ]
+}
