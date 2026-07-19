@@ -58,6 +58,17 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 
 ## Mediated Networks And Native Dependencies
 
+MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, and committed Android resolver evidence are present for each network.
+
+Matrix statuses:
+
+- `resolved`: AppLovin adapter evidence appears in committed resolver output.
+- `needs-resolution-evidence`: adapter or dependency XML evidence exists, but committed Android resolver output was not found.
+- `missing`: no AppLovin adapter evidence was found for the network.
+- `needs-review`: static evidence was ambiguous.
+
+The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, or dashboard APIs.
+
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
 | `MAX050` | Compares `requiredNetworks` with detected adapter/dependency evidence, including common MAX adapter aliases such as `google-adapter`, `facebook-adapter`, and `bytedance-adapter`. | High | Incomplete dependency evidence returns `UNKNOWN`; no dashboard/API confirmation. | Add required adapter/dependency evidence or adjust policy network list. |

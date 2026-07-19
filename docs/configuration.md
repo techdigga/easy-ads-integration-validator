@@ -57,6 +57,8 @@ Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. T
 
 `--report-detail compact` is the default and is intended for normal terminal and agent usage. It caps evidence per finding and records omitted counts.
 
+Markdown reports are optimized for humans: they include short score guidance plus friendly visual cues for blockers, manual review, warnings, static-analysis limits, and passes. JSON reports are optimized for agents, CI, and deterministic tooling; they keep stable enum/string values and do not include Markdown-only emoji or motivational copy.
+
 Use `--report-detail full --include-passes` when archiving a complete evidence report.
 
 Agent triage command:
@@ -122,6 +124,8 @@ Valid severities are `info`, `low`, `medium`, `high`, and `critical` case-insens
 - `pangle`
 
 If a project intentionally uses a smaller or different network set, set this list in local policy. Static evidence may come from Unity packages, EDM4U resolver files/settings, Android Gradle files, iOS pods/plists/postprocess files, or committed plugin artifacts.
+
+The same list also seeds the MAX `Ad Network Matrix` report section. The matrix may include additional detected networks when adapter evidence appears in committed files. It only treats Android dependencies as resolved when committed resolver evidence contains AppLovin mediation adapter artifacts such as `com.applovin.mediation:*adapter*` or `AppLovinMediation*Adapter`; third-party SDK libraries alone are not counted as MAX adapter resolution.
 
 ## Analytics revenue sink mode
 
