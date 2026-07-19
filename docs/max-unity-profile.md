@@ -23,7 +23,7 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 | `MAX010` | Checks Android minimum API, target API, and required Jetifier evidence. | High | Requires committed Android settings/templates. Missing fields are `UNKNOWN`. | Set Android API levels and Jetifier according to policy. |
 | `MAX011` | Looks for Android Gradle template/settings evidence and flags obvious incompatible settings. | Medium | Does not execute Gradle or resolve dependency graphs. | Commit compatible Gradle templates and repository/dependency settings. |
 | `MAX012` | Checks iOS deployment target against `minimumDeploymentTarget`. | Medium | Missing or unparsable iOS target evidence is `UNKNOWN`. | Set iOS deployment target to the policy threshold or higher. |
-| `MAX013` | Checks `NSUserTrackingUsageDescription` evidence when ATT description is required and committed iOS plist/postprocess evidence exists. | High | Skips projects with no committed iOS output because Unity may generate the final plist only during build. | Add ATT usage description in plist, settings, localization, or postprocess evidence when iOS output is committed. |
+| `MAX013` | Checks `NSUserTrackingUsageDescription` evidence when ATT description is required and committed iOS plist/postprocess evidence exists. | High | Treats projects with no committed iOS output as pass-level static scope because Unity may generate the final plist only during build. | Add ATT usage description in plist, settings, localization, or postprocess evidence when iOS output is committed. |
 | `MAX014` | Checks committed or generated SKAdNetwork ID evidence when required. | High | Generated-only evidence returns `UNKNOWN` when committed project evidence is absent. | Commit SKAdNetwork IDs or document/commit generated output evidence. |
 | `MAX021` | Checks Google/AdMob app ID evidence when `google-admob` is required. | High | Warns on absence; cannot query Google or AdMob configuration. | Add Android/iOS Google app ID evidence in supported Unity or platform files. |
 
@@ -58,16 +58,17 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 
 ## Mediated Networks And Native Dependencies
 
-MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, and committed Android resolver evidence are present for each network.
+MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, committed Android resolver evidence, and static Android/iOS adapter version strings are present for each network.
 
 Matrix statuses:
 
 - `resolved`: AppLovin adapter evidence appears in committed resolver output.
 - `needs-resolution-evidence`: adapter or dependency XML evidence exists, but committed Android resolver output was not found.
+- `version-mismatch`: multiple Android or iOS adapter versions were found for the same network.
 - `missing`: no AppLovin adapter evidence was found for the network.
 - `needs-review`: static evidence was ambiguous.
 
-The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, or dashboard APIs.
+The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, or dashboard APIs. Dynamic version ranges such as `10.+` are displayed as static evidence, not resolved to concrete package versions.
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |

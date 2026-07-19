@@ -5,7 +5,7 @@
 Install a .NET 8 or .NET 9 SDK/runtime, then install the tool:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.4
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.5
 ```
 
 Check the installed command:
@@ -36,6 +36,8 @@ Markdown is the default human-readable output:
 easy-ads-validator scan /path/to/unity-project --format markdown
 ```
 
+In an interactive terminal, Markdown scans show progress and ask whether to display the report inline or write it to a folder.
+
 JSON is better for CI and coding agents:
 
 ```bash
@@ -47,6 +49,8 @@ Write both formats to a folder:
 ```bash
 easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report
 ```
+
+When `--out` is provided, the command prints the generated report path and an open-command hint after a successful scan.
 
 ## 4. Read Results
 
