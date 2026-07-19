@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "tool": "easy-ads-validator",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "profile": "max-unity",
   "project": {
     "rootPath": "sample-unity-project",
@@ -9,8 +9,8 @@
     "isUnityProject": true
   },
   "scan": {
-    "startedAt": "2026-07-19T12:08:59.017938+00:00",
-    "toolVersion": "0.1.0-beta.3",
+    "startedAt": "2026-07-19T12:17:22.433653+00:00",
+    "toolVersion": "0.1.0-beta.4",
     "profileId": "max-unity",
     "includePasses": false,
     "failOn": "fail",

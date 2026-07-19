@@ -2,10 +2,10 @@
 
 ## 1. Install
 
-Install the .NET 9 SDK or runtime, then install the tool:
+Install a .NET 8 or .NET 9 SDK/runtime, then install the tool:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.3
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.4
 ```
 
 Check the installed command:

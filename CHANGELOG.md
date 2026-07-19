@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-beta.4
+
+Fourth public beta for Easy Ads Integration Validator.
+
+- Added multi-target NuGet global tool support for `net8.0` and `net9.0`.
+- Updated package validation to inspect both target-framework assets.
+- Updated public install docs and examples for `0.1.0-beta.4`.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.3
 
 Third public beta for Easy Ads Integration Validator.
