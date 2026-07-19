@@ -10,6 +10,8 @@ Start with compact JSON for triage:
 easy-ads-validator scan /path/to/unity-project --format json --report-detail compact
 ```
 
+Use JSON stdout or pass `--out` explicitly in automated workflows. Interactive Markdown stdout may show progress and ask a human whether to view the report inline or write it to a folder; JSON stdout and redirected output never prompt.
+
 Use full evidence only when a human or agent needs line-level context:
 
 ```bash
@@ -32,4 +34,3 @@ Evidence paths in reports are project-relative when possible. Do not assume a mi
 ## Boundaries
 
 The CLI does not run Unity, build Xcode or Gradle projects, inspect dashboards, read device logs, or call ad network APIs. Agents should preserve that boundary when interpreting results.
-

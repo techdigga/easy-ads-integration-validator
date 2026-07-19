@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0-beta.5
+
+Fifth public beta for Easy Ads Integration Validator.
+
+- Added interactive Markdown terminal progress for scan steps.
+- Added an interactive destination prompt for terminal or file report output when running in a real terminal.
+- Added generated report path output and OS-specific open hints for file reports.
+- Kept JSON output, redirected output, and CI environments prompt-free for automation and agent usage.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.4
 
 Fourth public beta for Easy Ads Integration Validator.
