@@ -2,10 +2,10 @@
 
 ## 1. Install
 
-Install the .NET 8 SDK or runtime, then install the tool:
+Install the .NET 9 SDK or runtime, then install the tool:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.2
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.3
 ```
 
 Check the installed command:
@@ -73,4 +73,3 @@ Use policy overrides for required networks, minimum SDK versions, severity chang
 ## 6. Beta Limits
 
 The scanner reads committed files only. It does not run Unity, build the project, call ad network dashboards, inspect device logs, or certify legal compliance.
-

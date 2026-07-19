@@ -47,9 +47,9 @@ Mediation: `max-unity`
 ## Scan Metadata
 
 - Tool: `easy-ads-validator`
-- Version: `0.1.0-beta.2`
+- Version: `0.1.0-beta.3`
 - Schema: `1.0`
-- Started at: `2026-07-19T11:48:12.2269940+00:00`
+- Started at: `2026-07-19T12:08:59.0179380+00:00`
 - Project root: `sample-unity-project`
 - Unity project: `True`
 - Include passes: `False`

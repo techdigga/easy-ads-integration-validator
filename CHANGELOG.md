@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0-beta.3
+
+Third public beta for Easy Ads Integration Validator.
+
+- Retargeted the CLI package to .NET 9 so it runs with the current installed maintainer SDK/runtime.
+- Updated release workflow defaults, local release scripts, public install docs, and examples for `0.1.0-beta.3`.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.2
 
 Second public beta for Easy Ads Integration Validator.
