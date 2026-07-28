@@ -3,11 +3,12 @@
 Profile: `max-unity`
 Project: `valid-max-basic`
 
-## Summary
+## Readiness
 
 Failure threshold (--fail-on `fail`): `PASS`
-Readiness score: `80/100` Grade: `B`
+Score: `80/100` Grade: `B`
 Close to release-ready. Work through the highest-severity findings next.
+Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.
 
 - Pass: 23
 - Fail: 0
@@ -15,10 +16,10 @@ Close to release-ready. Work through the highest-severity findings next.
 - Unknown: 10
 - Internal warnings: 0
 - Partial: False
-- Critical issues: 0
-- High issues: 4
-- Manual review: 0
-- Unknown / static limits: 10
+- 🔴 Critical issues: 0
+- 🟠 High issues: 4
+- Needs Review: 0
+- ❔ Unknown / static limits: 10
 
 Category progress:
 - Sdk Import: 3/3 pass (100%)
@@ -35,19 +36,19 @@ Category progress:
 
 Mediation: `max-unity`
 
-| Network | Installed | Adapter | Dependency XML | Android resolved | Status |
-| --- | --- | --- | --- | --- | --- |
-| Google AdMob | no | no | no | no | `missing` |
-| Meta | no | no | no | no | `missing` |
-| Mintegral | no | no | no | no | `missing` |
-| Pangle | no | no | no | no | `missing` |
-| Unity Ads | no | no | no | no | `missing` |
-| ironSource | no | no | no | no | `missing` |
+| Network | Installed | Android | iOS | Resolution |
+| --- | --- | --- | --- | --- |
+| Google AdMob | no | unknown | unknown | missing |
+| Meta | no | unknown | unknown | missing |
+| Mintegral | no | unknown | unknown | missing |
+| Pangle | no | unknown | unknown | missing |
+| Unity Ads | no | unknown | unknown | missing |
+| ironSource | no | unknown | unknown | missing |
 
 ## Scan Metadata
 
 - Tool: `easy-ads-validator`
-- Version: `0.1.0-beta.5`
+- Version: `0.1.0-beta.6`
 - Schema: `1.0`
 - Started at: `2026-07-19T12:17:22.4336530+00:00`
 - Project root: `sample-unity-project`
@@ -71,11 +72,11 @@ Mediation: `max-unity`
 - Unknown: 10
 - InternalWarn: 0
 
-## Warnings ⚠️ - Worth re-checking
+## Warnings 🟡 - Worth Re-checking
 
 ### MAX014: SKAdNetwork IDs are configured
 
-Status: ⚠️ `Warn` Severity: `High` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
 
 Category: `Platform Settings`
 
@@ -85,7 +86,7 @@ Remediation: Commit SKAdNetwork identifiers or deterministic iOS postprocess evi
 
 ### MAX021: Google AdMob app IDs are configured when required
 
-Status: ⚠️ `Warn` Severity: `High` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
 
 Category: `Platform Settings`
 
@@ -95,7 +96,7 @@ Remediation: Add Android and iOS Google Mobile Ads app IDs to committed platform
 
 ### MAX022: Ad unit IDs are present and organized
 
-Status: ⚠️ `Warn` Severity: `High` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
 
 Category: `Initialization`
 
@@ -105,7 +106,7 @@ Remediation: Declare MAX ad unit IDs in committed configuration or application c
 
 ### MAX081: Revenue callback forwards to configured analytics sinks
 
-Status: ⚠️ `Warn` Severity: `High` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
 
 Category: `Revenue`
 
@@ -119,7 +120,7 @@ Remediation: Forward MAX impression revenue to a configured analytics sink or up
 
 ### MAX032: MAX initialization is guarded
 
-Status: ⚠️ `Warn` Severity: `Medium` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟡 `Medium` Confidence: `Medium`
 
 Category: `Initialization`
 
@@ -132,7 +133,7 @@ Remediation: Guard MAX initialization so repeated lifecycle entry points cannot 
 
 ### MAX042: Privacy policy URL is configured
 
-Status: ⚠️ `Warn` Severity: `Medium` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟡 `Medium` Confidence: `Medium`
 
 Category: `Consent`
 
@@ -142,7 +143,7 @@ Remediation: Configure a privacy policy URL in consent/privacy UI or committed a
 
 ### MAX071: Retry system exists for failed loads
 
-Status: ⚠️ `Warn` Severity: `Medium` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟡 `Medium` Confidence: `Medium`
 
 Category: `Loading`
 
@@ -156,7 +157,7 @@ Remediation: Schedule bounded retries from failed load/display callbacks.
 
 ### MAX073: Video ads reload after close or fail callbacks
 
-Status: ⚠️ `Warn` Severity: `Medium` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🟡 `Medium` Confidence: `Medium`
 
 Category: `Loading`
 
@@ -174,7 +175,7 @@ Remediation: Reload interstitial and rewarded ads from hidden/closed and load/di
 
 ### MAX023: Placement names are tracked
 
-Status: ⚠️ `Warn` Severity: `Low` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🔵 `Low` Confidence: `Medium`
 
 Category: `Revenue`
 
@@ -187,7 +188,7 @@ Remediation: Pass placement names to MAX show calls or record equivalent placeme
 
 ### MAX074: Ad type loading is staged after initialization
 
-Status: ⚠️ `Warn` Severity: `Low` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🔵 `Low` Confidence: `Medium`
 
 Category: `Loading`
 
@@ -201,7 +202,7 @@ Remediation: Consider staging initial ad loads to reduce startup contention.
 
 ### MAX082: Revenue payload includes important fields
 
-Status: ⚠️ `Warn` Severity: `Low` Confidence: `Medium`
+Status: ⚠️ `Warn` Severity: 🔵 `Low` Confidence: `Medium`
 
 Category: `Revenue`
 
@@ -215,11 +216,11 @@ Evidence:
 
 Remediation: Include revenue, network, ad unit, placement, and precision where available in analytics payloads.
 
-## Unknown / Static Limits ❓ - Static-analysis limit
+## Unknown / Static Limits ❔ - Static-analysis Limit
 
 ### MAX003: External Dependency Manager evidence exists
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Dependencies`
 
@@ -227,7 +228,7 @@ External Dependency Manager evidence is absent or not committed.
 
 ### MAX004: Android resolver settings are acceptable
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Dependencies`
 
@@ -235,7 +236,7 @@ Committed Android resolver settings were not found.
 
 ### MAX012: iOS deployment target meets policy
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Platform Settings`
 
@@ -243,7 +244,7 @@ iOS deployment target setting was not found after checking Unity ProjectSettings
 
 ### MAX062: Banner and MREC callbacks are wired when used
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Callbacks`
 
@@ -251,7 +252,7 @@ Banner/MREC use evidence is absent.
 
 ### MAX063: App open callbacks are wired when used
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Callbacks`
 
@@ -259,7 +260,7 @@ App open ad use evidence is absent.
 
 ### MAX072: Retry delay appears exponential or bounded
 
-Status: ❓ `Unknown` Severity: `Medium` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
 Category: `Loading`
 
@@ -267,7 +268,7 @@ Retry scheduling evidence is absent.
 
 ### MAX013: ATT usage description is configured
 
-Status: ❓ `Unknown` Severity: `Low` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🔵 `Low` Confidence: `Low`
 
 Category: `Consent`
 
@@ -275,7 +276,7 @@ ATT usage description was not found in committed static inputs; generated iOS pl
 
 ### MAX044: Child-directed and age-related flags are considered
 
-Status: ❓ `Unknown` Severity: `Low` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🔵 `Low` Confidence: `Low`
 
 Category: `Consent`
 
@@ -283,7 +284,7 @@ Age-related privacy flag evidence was not found and is not required by default p
 
 ### MAX090: MAX Ad Review or quality service is configured
 
-Status: ❓ `Unknown` Severity: `Low` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🔵 `Low` Confidence: `Low`
 
 Category: `Production Safety`
 
@@ -291,7 +292,7 @@ Ad quality service evidence was not found and is not required by default policy.
 
 ### MAX091: Creative Debugger is not disabled unexpectedly
 
-Status: ❓ `Unknown` Severity: `Low` Confidence: `Low`
+Status: ❔ `Unknown` Severity: 🔵 `Low` Confidence: `Low`
 
 Category: `Production Safety`
 

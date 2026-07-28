@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "tool": "easy-ads-validator",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "profile": "max-unity",
   "project": {
     "rootPath": "sample-unity-project",
@@ -10,7 +10,7 @@
   },
   "scan": {
     "startedAt": "2026-07-19T12:17:22.433653+00:00",
-    "toolVersion": "0.1.0-beta.5",
+    "toolVersion": "0.1.0-beta.6",
     "profileId": "max-unity",
     "includePasses": false,
     "failOn": "fail",
@@ -621,7 +621,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       },
       {
         "id": "meta",
@@ -636,7 +643,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       },
       {
         "id": "mintegral",
@@ -651,7 +665,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       },
       {
         "id": "pangle",
@@ -666,7 +687,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       },
       {
         "id": "unity-ads",
@@ -681,7 +709,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       },
       {
         "id": "ironsource",
@@ -696,7 +731,14 @@
           "totalCount": 0,
           "shownCount": 0,
           "omittedCount": 0
-        }
+        },
+        "androidVersions": [],
+        "iosVersions": [],
+        "hasVersionMismatch": false,
+        "androidVersionEvidence": [],
+        "iosVersionEvidence": [],
+        "androidAdapterVersion": null,
+        "iosAdapterVersion": null
       }
     ]
   }

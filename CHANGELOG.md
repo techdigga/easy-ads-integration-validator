@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0-beta.6
+
+Sixth public beta for Easy Ads Integration Validator.
+
+- Hardened public release artifact validation and release tag guidance.
+- Improved MAX SDK package reference coverage.
+- Added adapter version visibility to the ad network matrix.
+- Polished Markdown reports for faster human triage.
+- Updated Codex and Claude agent workflow guidance.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.5
 
 Fifth public beta for Easy Ads Integration Validator.

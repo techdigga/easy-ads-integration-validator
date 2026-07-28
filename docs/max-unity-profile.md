@@ -58,7 +58,7 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 
 ## Mediated Networks And Native Dependencies
 
-MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, committed Android resolver evidence, and static Android/iOS adapter version strings are present for each network.
+MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, committed Android resolver evidence, and static Android/iOS adapter version strings are present for each network. Markdown reports show concise `Android`, `iOS`, and `Resolution` columns; JSON matrix rows preserve the detailed evidence fields and also expose nullable `androidAdapterVersion` and `iosAdapterVersion` fields for agent consumers.
 
 Matrix statuses:
 
@@ -68,7 +68,7 @@ Matrix statuses:
 - `missing`: no AppLovin adapter evidence was found for the network.
 - `needs-review`: static evidence was ambiguous.
 
-The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, or dashboard APIs. Dynamic version ranges such as `10.+` are displayed as static evidence, not resolved to concrete package versions.
+The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, or dashboard APIs. Dynamic version ranges such as `10.+` are displayed as static evidence, not resolved to concrete package versions. Singular adapter-version fields are populated only when exactly one static version was found for that platform; they are `null` in JSON and `unknown` in Markdown when evidence is missing or ambiguous.
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |

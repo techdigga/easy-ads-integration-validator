@@ -57,7 +57,7 @@ Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. T
 
 `--report-detail compact` is the default and is intended for normal terminal and agent usage. It caps evidence per finding and records omitted counts.
 
-Markdown reports are optimized for humans: they include short score guidance plus friendly visual cues for blockers, manual review, warnings, static-analysis limits, and passes. JSON reports are optimized for agents, CI, and deterministic tooling; they keep stable enum/string values and do not include Markdown-only emoji or motivational copy.
+Markdown reports are optimized for humans: they include a stable `## Readiness` section, short score guidance, the line `Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.`, and restrained symbols for severity/status cues. JSON reports are optimized for agents, CI, and deterministic tooling; they keep stable enum/string values and do not include Markdown-only labels, symbols, emoji, or guidance copy.
 
 Use `--report-detail full --include-passes` when archiving a complete evidence report.
 

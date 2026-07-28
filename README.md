@@ -11,7 +11,7 @@ Use it when you need a local AppLovin MAX mediation audit, Unity mobile ads stat
 Prerequisite: .NET 8 or .NET 9 SDK/runtime.
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.5
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.6
 ```
 
 Update:
@@ -34,10 +34,16 @@ From any terminal:
 easy-ads-validator scan /path/to/unity-project
 ```
 
-Agent-friendly JSON:
+CI-friendly compact JSON:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format json --report-detail compact
+```
+
+Agent-friendly compact reports:
+
+```bash
+easy-ads-validator scan <UNITY_PROJECT_PATH> --format markdown,json --report-detail compact --out <REPORT_DIR>
 ```
 
 Archive both report formats:
