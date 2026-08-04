@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-beta.7
+
+Seventh public beta for Easy Ads Integration Validator.
+
+- Applied the finalized MAX rule hardening across SDK setup, platform settings, keys, ad units, initialization, consent, network dependencies, callbacks, loading, revenue, and production safety.
+- Improved API-aware static evidence for Unity MAX integrations, including package references, mediated dependency resolution, and callback behavior.
+- Kept critical findings prioritized and retained compact, agent-friendly reports for CLI and coding-agent workflows.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.6
 
 Sixth public beta for Easy Ads Integration Validator.

@@ -11,7 +11,7 @@ Use it when you need a local AppLovin MAX mediation audit, Unity mobile ads stat
 Prerequisite: .NET 8 or .NET 9 SDK/runtime.
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.6
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.7
 ```
 
 Update:

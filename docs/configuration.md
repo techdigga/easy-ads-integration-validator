@@ -11,15 +11,17 @@ The MVP supports embedded default policy plus an optional local JSON policy pass
     "MAX092": "critical"
   },
   "maxUnity": {
-    "minimumUnityVersion": "2021.3",
-    "minimumMaxPluginVersion": "8.0.0",
+    "minimumUnityVersion": "2022.3.62f2",
+    "minimumMaxPluginVersion": "8.6.0",
+    "minimumExternalDependencyManagerVersion": "1.2.185",
     "android": {
       "minimumApi": 24,
-      "targetApiAtLeast": 35,
+      "targetApiAtLeast": 36,
       "requireJetifier": true
     },
     "ios": {
       "minimumDeploymentTarget": "13.0",
+      "recommendedDeploymentTarget": "15.0",
       "requireAttDescription": true,
       "requireSkanIds": true
     },
@@ -57,7 +59,7 @@ Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. T
 
 `--report-detail compact` is the default and is intended for normal terminal and agent usage. It caps evidence per finding and records omitted counts.
 
-Markdown reports are optimized for humans: they include a stable `## Readiness` section, short score guidance, the line `Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.`, and restrained symbols for severity/status cues. JSON reports are optimized for agents, CI, and deterministic tooling; they keep stable enum/string values and do not include Markdown-only labels, symbols, emoji, or guidance copy.
+Markdown reports are optimized for humans: they include a stable `## Readiness` section, short score guidance, the line `Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.`, and restrained symbols for severity/status cues. Markdown findings are ordered for action: `FAIL` and `INTERNAL_WARN` blockers first, then manual-review warnings, other warnings, unknown/static-limit items, and passes; each group is ordered by severity and then rule ID. JSON reports use deterministic status, severity, and rule-ID ordering for agents and CI, keep stable enum/string values, and do not include Markdown-only labels, symbols, emoji, or guidance copy.
 
 Use `--report-detail full --include-passes` when archiving a complete evidence report.
 
@@ -78,12 +80,14 @@ easy-ads-validator scan . --format markdown,json --out audit-report --include-pa
 | Field | Default |
 | --- | --- |
 | `profile` | `max-unity` |
-| `minimumUnityVersion` | `2021.3` |
-| `minimumMaxPluginVersion` | `8.0.0` |
+| `minimumUnityVersion` | `2022.3.62f2` |
+| `minimumMaxPluginVersion` | `8.6.0` |
+| `minimumExternalDependencyManagerVersion` | `1.2.185` |
 | `android.minimumApi` | `24` |
-| `android.targetApiAtLeast` | `35` |
+| `android.targetApiAtLeast` | `36` |
 | `android.requireJetifier` | `true` |
 | `ios.minimumDeploymentTarget` | `13.0` |
+| `ios.recommendedDeploymentTarget` | `15.0` |
 | `ios.requireAttDescription` | `true` |
 | `ios.requireSkanIds` | `true` |
 | `requiredNetworks` | `google-admob`, `unity-ads`, `ironsource`, `meta`, `mintegral`, `pangle` |
@@ -92,7 +96,7 @@ easy-ads-validator scan . --format markdown,json --out audit-report --include-pa
 | `requirements.consentFlow` | `true` |
 | `requirements.attDescription` | `true` |
 | `requirements.skanIds` | `true` |
-| `requirements.revenueTracking` | `true` |
+| `requirements.revenueTracking` | `false` |
 | `requirements.qualityService` | `false` |
 | `requirements.childDirectedFlags` | `false` |
 
@@ -146,10 +150,10 @@ The `requirements` object controls whether selected checks are required:
 | --- | --- |
 | `consentFlow` | `MAX040` passes immediately when false; otherwise consent evidence is required when MAX use is detected. |
 | `attDescription` | `MAX013` passes immediately only when both `requirements.attDescription` and `ios.requireAttDescription` are false; otherwise ATT usage description evidence is expected. |
-| `skanIds` | `MAX014` passes immediately only when both `requirements.skanIds` and `ios.requireSkanIds` are false; otherwise SKAdNetwork ID evidence is expected. |
-| `revenueTracking` | `MAX080` passes immediately when false; otherwise revenue callback evidence is expected when MAX use is detected. |
-| `qualityService` | `MAX090` warns when true and no quality/ad review evidence is found; otherwise missing evidence is `UNKNOWN`. |
-| `childDirectedFlags` | `MAX044` warns when true and no age-related flag evidence is found; otherwise missing evidence is `UNKNOWN`. |
+| `skanIds` | `MAX014` is currently skipped by default pending the dedicated SKAN evidence model; disabling this requirement still produces a pass. |
+| `revenueTracking` | `MAX080`–`MAX082` are neutral when false and no revenue intent is visible; explicit policy true makes missing non-app-open callback evidence a warning. |
+| `qualityService` | `MAX090` always warns when quality/ad review evidence is absent; true changes the wording to a policy request. |
+| `childDirectedFlags` | `MAX044` warns when true and no age-related flag evidence is found; missing evidence remains an advisory warning even when false. |
 
 ## Remote-policy-ready boundary
 

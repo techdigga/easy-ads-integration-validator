@@ -4,15 +4,17 @@
     "MAX092": "critical"
   },
   "maxUnity": {
-    "minimumUnityVersion": "2021.3",
-    "minimumMaxPluginVersion": "8.0.0",
+    "minimumUnityVersion": "2022.3.62f2",
+    "minimumMaxPluginVersion": "8.6.0",
+    "minimumExternalDependencyManagerVersion": "1.2.185",
     "android": {
       "minimumApi": 24,
-      "targetApiAtLeast": 35,
+      "targetApiAtLeast": 36,
       "requireJetifier": true
     },
     "ios": {
       "minimumDeploymentTarget": "13.0",
+      "recommendedDeploymentTarget": "15.0",
       "requireAttDescription": true,
       "requireSkanIds": true
     },

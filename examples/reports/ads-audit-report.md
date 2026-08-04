@@ -6,27 +6,27 @@ Project: `valid-max-basic`
 ## Readiness
 
 Failure threshold (--fail-on `fail`): `PASS`
-Score: `80/100` Grade: `B`
-Close to release-ready. Work through the highest-severity findings next.
+Score: `93/100` Grade: `A`
+Strong shape. Keep an eye on manual-review and unknown items before release.
 Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.
 
-- Pass: 23
+- Pass: 31
 - Fail: 0
-- Warn: 11
-- Unknown: 10
+- Warn: 7
+- Unknown: 9
 - Internal warnings: 0
 - Partial: False
 - 🔴 Critical issues: 0
-- 🟠 High issues: 4
+- 🟠 High issues: 2
 - Needs Review: 0
-- ❔ Unknown / static limits: 10
+- ❔ Unknown / static limits: 9
 
 Category progress:
-- Sdk Import: 3/3 pass (100%)
-- Platform Settings: 2/5 pass (40%)
-- Initialization: 6/8 pass (75%)
-- Consent: 3/6 pass (50%)
-- Dependencies: 3/5 pass (60%)
+- Sdk Import: 4/5 pass (80%)
+- Platform Settings: 4/6 pass (66%)
+- Initialization: 7/8 pass (87%)
+- Consent: 5/6 pass (83%)
+- Dependencies: 5/5 pass (100%)
 - Callbacks: 3/5 pass (60%)
 - Loading: 1/5 pass (20%)
 - Revenue: 1/4 pass (25%)
@@ -38,7 +38,7 @@ Mediation: `max-unity`
 
 | Network | Installed | Android | iOS | Resolution |
 | --- | --- | --- | --- | --- |
-| Google AdMob | no | unknown | unknown | missing |
+| Google AdMob | yes | 23.6.0.0 | unknown | needs iOS evidence |
 | Meta | no | unknown | unknown | missing |
 | Mintegral | no | unknown | unknown | missing |
 | Pangle | no | unknown | unknown | missing |
@@ -48,7 +48,7 @@ Mediation: `max-unity`
 ## Scan Metadata
 
 - Tool: `easy-ads-validator`
-- Version: `0.1.0-beta.6`
+- Version: `0.1.0-beta.7`
 - Schema: `1.0`
 - Started at: `2026-07-19T12:17:22.4336530+00:00`
 - Project root: `sample-unity-project`
@@ -59,50 +59,20 @@ Mediation: `max-unity`
 ## Displayed Counts By Severity
 
 - Info: 0
-- Low: 7
-- Medium: 10
-- High: 4
+- Low: 6
+- Medium: 8
+- High: 2
 - Critical: 0
 
 ## Displayed Counts By Status
 
 - Pass: 0
 - Fail: 0
-- Warn: 11
-- Unknown: 10
+- Warn: 7
+- Unknown: 9
 - InternalWarn: 0
 
 ## Warnings 🟡 - Worth Re-checking
-
-### MAX014: SKAdNetwork IDs are configured
-
-Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
-
-Category: `Platform Settings`
-
-SKAdNetwork ID evidence was not found after checking MAX settings, committed Info.plist files, and iOS post-process scripts.
-
-Remediation: Commit SKAdNetwork identifiers or deterministic iOS postprocess evidence for required mediated networks.
-
-### MAX021: Google AdMob app IDs are configured when required
-
-Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
-
-Category: `Platform Settings`
-
-Policy requires Google/AdMob mediation but app ID evidence was not found.
-
-Remediation: Add Android and iOS Google Mobile Ads app IDs to committed platform configuration when AdMob is enabled.
-
-### MAX022: Ad unit IDs are present and organized
-
-Status: ⚠️ `Warn` Severity: 🟠 `High` Confidence: `Medium`
-
-Category: `Initialization`
-
-Ad unit ID evidence was not found.
-
-Remediation: Declare MAX ad unit IDs in committed configuration or application code, organized by ad format.
 
 ### MAX081: Revenue callback forwards to configured analytics sinks
 
@@ -130,16 +100,6 @@ Evidence:
 - `Assets/Scripts/AdsManager.cs:10`
 
 Remediation: Guard MAX initialization so repeated lifecycle entry points cannot initialize the SDK more than once.
-
-### MAX042: Privacy policy URL is configured
-
-Status: ⚠️ `Warn` Severity: 🟡 `Medium` Confidence: `Medium`
-
-Category: `Consent`
-
-Privacy policy URL/path evidence was not found.
-
-Remediation: Configure a privacy policy URL in consent/privacy UI or committed app configuration.
 
 ### MAX071: Retry system exists for failed loads
 
@@ -179,12 +139,12 @@ Status: ⚠️ `Warn` Severity: 🔵 `Low` Confidence: `Medium`
 
 Category: `Revenue`
 
-MAX show calls do not include obvious placement names.
+MAX show or placement calls do not consistently include meaningful placement names.
 
 Evidence:
 - `Assets/Scripts/AdsManager.cs:36`
 
-Remediation: Pass placement names to MAX show calls or record equivalent placement metadata.
+Remediation: Pass placement/source names to MAX show calls, banner/MREC placement setters, or a connected show abstraction.
 
 ### MAX074: Ad type loading is staged after initialization
 
@@ -212,27 +172,31 @@ Evidence:
 - `Assets/Scripts/AdsManager.cs:20`
 - `Assets/Scripts/AdsManager.cs:27`
 - `Assets/Scripts/AdsManager.cs:20`
-- `Assets/Scripts/AdsManager.cs:27`
+- 1 more evidence item(s) omitted. Use `--report-detail full` for complete evidence.
 
 Remediation: Include revenue, network, ad unit, placement, and precision where available in analytics payloads.
 
 ## Unknown / Static Limits ❔ - Static-analysis Limit
 
-### MAX003: External Dependency Manager evidence exists
+### MAX006: MAX SDK assembly definitions exist
+
+Status: ❔ `Unknown` Severity: 🟠 `High` Confidence: `Low`
+
+Category: `Sdk Import`
+
+UPM MAX package metadata exists, but package contents are not committed, so assembly definitions could not be inspected.
+
+Evidence:
+- `Packages/manifest.json`
+  - `com.applovin.mediation.ads`
+
+### MAX011: Android Gradle settings are compatible
 
 Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 
-Category: `Dependencies`
+Category: `Platform Settings`
 
-External Dependency Manager evidence is absent or not committed.
-
-### MAX004: Android resolver settings are acceptable
-
-Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
-
-Category: `Dependencies`
-
-Committed Android resolver settings were not found.
+Unity custom Gradle template toggle evidence is missing.
 
 ### MAX012: iOS deployment target meets policy
 
@@ -265,14 +229,6 @@ Status: ❔ `Unknown` Severity: 🟡 `Medium` Confidence: `Low`
 Category: `Loading`
 
 Retry scheduling evidence is absent.
-
-### MAX013: ATT usage description is configured
-
-Status: ❔ `Unknown` Severity: 🔵 `Low` Confidence: `Low`
-
-Category: `Consent`
-
-ATT usage description was not found in committed static inputs; generated iOS plist output cannot be evaluated without building.
 
 ### MAX044: Child-directed and age-related flags are considered
 

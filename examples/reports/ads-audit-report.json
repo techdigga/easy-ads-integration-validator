@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "tool": "easy-ads-validator",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "profile": "max-unity",
   "project": {
     "rootPath": "sample-unity-project",
@@ -10,61 +10,61 @@
   },
   "scan": {
     "startedAt": "2026-07-19T12:17:22.433653+00:00",
-    "toolVersion": "0.1.0-beta.6",
+    "toolVersion": "0.1.0-beta.7",
     "profileId": "max-unity",
     "includePasses": false,
     "failOn": "fail",
     "verbose": false,
     "reportDetail": "compact",
-    "maxEvidencePerFinding": null,
+    "maxEvidencePerFinding": 3,
     "summaryOnly": false
   },
   "summary": {
-    "passCount": 23,
+    "passCount": 31,
     "failCount": 0,
-    "warnCount": 11,
-    "unknownCount": 10,
+    "warnCount": 7,
+    "unknownCount": 9,
     "internalWarnCount": 0,
     "isPartial": false,
     "meetsFailureThreshold": false,
     "score": {
-      "value": 80,
-      "grade": "B",
+      "value": 93,
+      "grade": "A",
       "categories": [
         {
           "category": "sdkimport",
-          "passCount": 3,
-          "nonPassCount": 0,
-          "totalCount": 3,
-          "completionPercent": 100
+          "passCount": 4,
+          "nonPassCount": 1,
+          "totalCount": 5,
+          "completionPercent": 80
         },
         {
           "category": "platformsettings",
-          "passCount": 2,
-          "nonPassCount": 3,
-          "totalCount": 5,
-          "completionPercent": 40
+          "passCount": 4,
+          "nonPassCount": 2,
+          "totalCount": 6,
+          "completionPercent": 66
         },
         {
           "category": "initialization",
-          "passCount": 6,
-          "nonPassCount": 2,
+          "passCount": 7,
+          "nonPassCount": 1,
           "totalCount": 8,
-          "completionPercent": 75
+          "completionPercent": 87
         },
         {
           "category": "consent",
-          "passCount": 3,
-          "nonPassCount": 3,
+          "passCount": 5,
+          "nonPassCount": 1,
           "totalCount": 6,
-          "completionPercent": 50
+          "completionPercent": 83
         },
         {
           "category": "dependencies",
-          "passCount": 3,
-          "nonPassCount": 2,
+          "passCount": 5,
+          "nonPassCount": 0,
           "totalCount": 5,
-          "completionPercent": 60
+          "completionPercent": 100
         },
         {
           "category": "callbacks",
@@ -98,66 +98,12 @@
     },
     "triage": {
       "criticalIssueCount": 0,
-      "highIssueCount": 4,
+      "highIssueCount": 2,
       "manualReviewCount": 0,
-      "unknownCount": 10
+      "unknownCount": 9
     }
   },
   "findings": [
-    {
-      "id": "MAX014",
-      "title": "SKAdNetwork IDs are configured",
-      "category": "platformsettings",
-      "status": "WARN",
-      "severity": "high",
-      "confidence": "medium",
-      "message": "SKAdNetwork ID evidence was not found after checking MAX settings, committed Info.plist files, and iOS post-process scripts.",
-      "evidence": [],
-      "remediation": "Commit SKAdNetwork identifiers or deterministic iOS postprocess evidence for required mediated networks.",
-      "docsUrl": null,
-      "ruleVersion": "1.0.0",
-      "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
-        "omittedCount": 0
-      }
-    },
-    {
-      "id": "MAX021",
-      "title": "Google AdMob app IDs are configured when required",
-      "category": "platformsettings",
-      "status": "WARN",
-      "severity": "high",
-      "confidence": "medium",
-      "message": "Policy requires Google/AdMob mediation but app ID evidence was not found.",
-      "evidence": [],
-      "remediation": "Add Android and iOS Google Mobile Ads app IDs to committed platform configuration when AdMob is enabled.",
-      "docsUrl": null,
-      "ruleVersion": "1.0.0",
-      "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
-        "omittedCount": 0
-      }
-    },
-    {
-      "id": "MAX022",
-      "title": "Ad unit IDs are present and organized",
-      "category": "initialization",
-      "status": "WARN",
-      "severity": "high",
-      "confidence": "medium",
-      "message": "Ad unit ID evidence was not found.",
-      "evidence": [],
-      "remediation": "Declare MAX ad unit IDs in committed configuration or application code, organized by ad format.",
-      "docsUrl": null,
-      "ruleVersion": "1.0.0",
-      "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
-        "omittedCount": 0
-      }
-    },
     {
       "id": "MAX081",
       "title": "Revenue callback forwards to configured analytics sinks",
@@ -214,24 +160,6 @@
       "evidenceSummary": {
         "totalCount": 1,
         "shownCount": 1,
-        "omittedCount": 0
-      }
-    },
-    {
-      "id": "MAX042",
-      "title": "Privacy policy URL is configured",
-      "category": "consent",
-      "status": "WARN",
-      "severity": "medium",
-      "confidence": "medium",
-      "message": "Privacy policy URL/path evidence was not found.",
-      "evidence": [],
-      "remediation": "Configure a privacy policy URL in consent/privacy UI or committed app configuration.",
-      "docsUrl": null,
-      "ruleVersion": "1.0.0",
-      "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
         "omittedCount": 0
       }
     },
@@ -321,7 +249,7 @@
       "status": "WARN",
       "severity": "low",
       "confidence": "medium",
-      "message": "MAX show calls do not include obvious placement names.",
+      "message": "MAX show or placement calls do not consistently include meaningful placement names.",
       "evidence": [
         {
           "filePath": "Assets/Scripts/AdsManager.cs",
@@ -331,7 +259,7 @@
           "symbol": "MaxSdk.ShowInterstitial()"
         }
       ],
-      "remediation": "Pass placement names to MAX show calls or record equivalent placement metadata.",
+      "remediation": "Pass placement/source names to MAX show calls, banner/MREC placement setters, or a connected show abstraction.",
       "docsUrl": null,
       "ruleVersion": "1.0.0",
       "evidenceSummary": {
@@ -402,13 +330,6 @@
           "column": 9,
           "snippet": null,
           "symbol": "MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent"
-        },
-        {
-          "filePath": "Assets/Scripts/AdsManager.cs",
-          "line": 27,
-          "column": 9,
-          "snippet": null,
-          "symbol": "MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent"
         }
       ],
       "remediation": "Include revenue, network, ad unit, placement, and precision where available in analytics payloads.",
@@ -416,36 +337,44 @@
       "ruleVersion": "1.0.0",
       "evidenceSummary": {
         "totalCount": 4,
-        "shownCount": 4,
-        "omittedCount": 0
+        "shownCount": 3,
+        "omittedCount": 1
       }
     },
     {
-      "id": "MAX003",
-      "title": "External Dependency Manager evidence exists",
-      "category": "dependencies",
+      "id": "MAX006",
+      "title": "MAX SDK assembly definitions exist",
+      "category": "sdkimport",
       "status": "UNKNOWN",
-      "severity": "medium",
+      "severity": "high",
       "confidence": "low",
-      "message": "External Dependency Manager evidence is absent or not committed.",
-      "evidence": [],
+      "message": "UPM MAX package metadata exists, but package contents are not committed, so assembly definitions could not be inspected.",
+      "evidence": [
+        {
+          "filePath": "Packages/manifest.json",
+          "line": null,
+          "column": null,
+          "snippet": "com.applovin.mediation.ads",
+          "symbol": null
+        }
+      ],
       "remediation": null,
       "docsUrl": null,
       "ruleVersion": "1.0.0",
       "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
+        "totalCount": 1,
+        "shownCount": 1,
         "omittedCount": 0
       }
     },
     {
-      "id": "MAX004",
-      "title": "Android resolver settings are acceptable",
-      "category": "dependencies",
+      "id": "MAX011",
+      "title": "Android Gradle settings are compatible",
+      "category": "platformsettings",
       "status": "UNKNOWN",
       "severity": "medium",
       "confidence": "low",
-      "message": "Committed Android resolver settings were not found.",
+      "message": "Unity custom Gradle template toggle evidence is missing.",
       "evidence": [],
       "remediation": null,
       "docsUrl": null,
@@ -529,24 +458,6 @@
       }
     },
     {
-      "id": "MAX013",
-      "title": "ATT usage description is configured",
-      "category": "consent",
-      "status": "UNKNOWN",
-      "severity": "low",
-      "confidence": "low",
-      "message": "ATT usage description was not found in committed static inputs; generated iOS plist output cannot be evaluated without building.",
-      "evidence": [],
-      "remediation": null,
-      "docsUrl": null,
-      "ruleVersion": "1.0.0",
-      "evidenceSummary": {
-        "totalCount": 0,
-        "shownCount": 0,
-        "omittedCount": 0
-      }
-    },
-    {
       "id": "MAX044",
       "title": "Child-directed and age-related flags are considered",
       "category": "consent",
@@ -611,23 +522,51 @@
       {
         "id": "google-admob",
         "displayName": "Google AdMob",
-        "installed": false,
+        "installed": true,
         "adapterEvidenceFound": false,
         "dependencyXmlFound": false,
-        "androidResolverEvidenceFound": false,
-        "status": "missing",
-        "evidence": [],
+        "androidResolverEvidenceFound": true,
+        "status": "resolved",
+        "evidence": [
+          {
+            "filePath": "ProjectSettings/AndroidResolverDependencies.xml",
+            "line": 3,
+            "column": null,
+            "snippet": null,
+            "symbol": "google-admob"
+          }
+        ],
         "evidenceSummary": {
-          "totalCount": 0,
-          "shownCount": 0,
+          "totalCount": 1,
+          "shownCount": 1,
           "omittedCount": 0
         },
-        "androidVersions": [],
+        "androidVersions": [
+          "23.6.0.0"
+        ],
         "iosVersions": [],
         "hasVersionMismatch": false,
-        "androidVersionEvidence": [],
+        "androidVersionEvidence": [
+          {
+            "version": "23.6.0.0",
+            "evidence": [
+              {
+                "filePath": "ProjectSettings/AndroidResolverDependencies.xml",
+                "line": 3,
+                "column": null,
+                "snippet": null,
+                "symbol": "google-admob"
+              }
+            ],
+            "evidenceSummary": {
+              "totalCount": 1,
+              "shownCount": 1,
+              "omittedCount": 0
+            }
+          }
+        ],
         "iosVersionEvidence": [],
-        "androidAdapterVersion": null,
+        "androidAdapterVersion": "23.6.0.0",
         "iosAdapterVersion": null
       },
       {
