@@ -104,7 +104,7 @@ The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, o
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
 | `MAX080` | Checks non-app-open MAX revenue callback coverage only when revenue tracking intent or policy requires it. | Medium | Does not verify server-side reporting or runtime callback delivery. | Subscribe to the relevant MAX ad revenue callbacks for used formats. |
-| `MAX081` | Checks direct analytics forwarding and project event subscribers; visible subscriber payload usage can pass, while unproven downstream paths remain manual review. | Medium | Cannot prove downstream analytics ingestion or runtime event delivery. | Forward revenue payloads to analytics, or manually verify indirect event pipelines. |
+| `MAX081` | Checks provider-specific revenue contracts for detected Firebase Analytics, AppsFlyer, and Adjust integrations; unsupported analytics SDKs remain inventory-only. | Medium | Cannot prove downstream analytics ingestion or runtime event delivery. | Forward MAX revenue through each detected provider's canonical API and payload structure, or manually verify indirect event pipelines. |
 | `MAX082` | Advises on useful revenue payload fields and warns on direct Unity UI/scene mutation from revenue callback handlers. | Low | Does not validate runtime thread affinity or payload completeness. | Preserve useful MAX ad info fields and dispatch UI work to the Unity main thread. |
 
 ## Debugging And Production Safety

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0-beta.8
+
+Eighth public beta for Easy Ads Integration Validator.
+
+- Added minified compact JSON output for lower agent and CI context usage without changing the report schema.
+- Added bounded MCP finding retrieval with entry/terminal evidence preservation and explicit full-evidence expansion.
+- Documented the stable compact report and MCP retrieval contract for Codex, Claude, and compatible clients.
+- Hardened release validation for compact JSON and retained reproducible multi-target package and artifact checks.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.7
 
 Seventh public beta for Easy Ads Integration Validator.

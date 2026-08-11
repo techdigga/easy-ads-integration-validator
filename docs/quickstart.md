@@ -1,85 +1,127 @@
 # Quickstart
 
-## 1. Install
+This walkthrough takes a Unity developer from installation to a first AppLovin MAX audit. For the complete public guide map and support links, see the [Documentation index](index.md) and [README](../README.md).
 
-Install a .NET 8 or .NET 9 SDK/runtime, then install the tool:
+## 1. Install The CLI
+
+Install .NET 8, .NET 9, or .NET 10, then install the public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.7
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.8
 ```
 
-Check the installed command:
+Verify the command:
 
 ```bash
+dotnet --info
 easy-ads-validator --version
 ```
 
-## 2. Run Your First Scan
+On Windows PowerShell, the install command is the same. If the command is not found after installation, add the global .NET tools directory to the current session:
 
-Point the scanner at a Unity project folder:
+```powershell
+$env:PATH = "$env:PATH;$env:USERPROFILE\.dotnet\tools"
+```
+
+On macOS or Linux:
+
+```bash
+export PATH="$PATH:$HOME/.dotnet/tools"
+```
+
+Open a new shell after adding the directory permanently to the user PATH.
+
+## 2. Run A First Scan
+
+Pass the root folder of the Unity project:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project
 ```
 
-The beta defaults to Unity and AppLovin MAX:
+PowerShell example:
+
+```powershell
+easy-ads-validator scan "C:\Projects\My Unity Game"
+```
+
+The default profile is Unity AppLovin MAX. You can state it explicitly:
 
 ```bash
-easy-ads-validator scan /path/to/unity-project --platform unity --mediation max
+easy-ads-validator scan /path/to/unity-project --platform unity --mediation max --profile max-unity
 ```
+
+The command reads committed project files only. It does not open Unity or change the project.
 
 ## 3. Choose Report Output
 
-Markdown is the default human-readable output:
+Use Markdown for a human-readable terminal report:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format markdown
 ```
 
-In an interactive terminal, Markdown scans show progress and ask whether to display the report inline or write it to a folder.
-
-JSON stdout is better for CI:
+Use compact JSON for CI or a coding agent:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format json --report-detail compact
 ```
 
-Coding agents should read compact Markdown and JSON from an output folder:
-
-```bash
-easy-ads-validator scan <UNITY_PROJECT_PATH> --format markdown,json --report-detail compact --out <REPORT_DIR>
-```
-
-Write both formats to a folder:
+Write both formats to a directory:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report
 ```
 
-When `--out` is provided, the command prints the generated report path and an open-command hint after a successful scan.
+Use full evidence while investigating a specific rule:
 
-## 4. Read Results
+```bash
+easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report --include-passes --report-detail full
+```
 
-Each finding has:
+Interactive Markdown output can show progress and ask whether to display the report or write it to a file. Explicit output paths and JSON output remain non-interactive.
 
-- `PASS`: evidence was found for the expected integration behavior.
-- `FAIL`: strong evidence of a release-blocking problem.
-- `WARN`: likely issue or manual follow-up needed.
-- `UNKNOWN`: static analysis could not prove the result from committed files.
-- `INTERNAL_WARN`: a rule could not complete and emitted diagnostics.
+## 4. Read Results And Gate CI
 
-Severity describes potential impact. Confidence describes how strong the static evidence is.
+Each finding has a status, severity, confidence, evidence, remediation, and limitations:
 
-## 5. Tune Policy
+| Status | Meaning |
+| --- | --- |
+| `PASS` | Expected static evidence was found. |
+| `FAIL` | Strong static evidence indicates a release-blocking problem. |
+| `WARN` | A likely issue or manual follow-up was detected. |
+| `UNKNOWN` | Available committed files cannot prove the result. |
+| `INTERNAL_WARN` | The scanner reported an internal rule or infrastructure problem. |
 
-Copy the sample policy and adjust it for the project:
+Use `--fail-on` to gate CI on failed findings at a severity threshold:
+
+```bash
+easy-ads-validator scan "$UNITY_PROJECT" --format json --report-detail compact --fail-on high
+```
+
+Exit code `1` means the scan completed and findings met the configured threshold. Exit code `2` means the command or input was invalid. Exit code `3` means an unexpected internal error occurred.
+
+## 5. Tune Local Policy
+
+Start from the sample policy:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --policy examples/ads-audit.json
 ```
 
-Use policy overrides for required networks, minimum SDK versions, severity changes, and project-specific MAX API aliases.
+Policy can adjust supported thresholds, required networks, severity overrides, and MAX API aliases. It does not enable dashboard checks or runtime validation. See [Configuration](configuration.md).
 
-## 6. Beta Limits
+## 6. Optional MCP Tools
 
-The scanner reads committed files only. It does not run Unity, build the project, call ad network dashboards, inspect device logs, or certify legal compliance.
+Install the optional MCP package at the same version as the CLI:
+
+```bash
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.8
+easy-ads-validator-mcp
+```
+
+Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or another MCP client. It provides read-only scan and report tools around the CLI and does not apply fixes. See the [agent contract](agent-contract.md).
+
+## 7. Beta Limits
+
+The validator is a public beta. It does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.

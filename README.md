@@ -1,104 +1,196 @@
 # Easy Ads Integration Validator
 
-Easy Ads Integration Validator is a command-line Unity MAX integration checker for static AppLovin MAX mediation audits.
+### Find Unity MAX integration gaps before they become build failures, lost revenue, or release surprises.
 
-The public beta scans files already committed in a Unity project and reports integration risks in Markdown or JSON. It is designed for Unity game developers, QA teams, CI jobs, and coding agents that need fast feedback before a release review.
+Easy Ads Integration Validator is a developer-first static audit tool for Unity game teams using AppLovin MAX. It inspects the project files already in source control, explains what it found, and produces focused Markdown or JSON reports that developers, CI jobs, Codex, and Claude can use immediately.
 
-Use it when you need a local AppLovin MAX mediation audit, Unity mobile ads static analyzer, or pre-release ad integration validator without dashboard API access.
+**One scan. Clear evidence. Faster fixes.**
+
+## Why Teams Use It
+
+- Review a MAX integration without opening Unity or building the project.
+- Catch missing SDK setup, adapters, dependencies, privacy configuration, callbacks, and ad lifecycle wiring early.
+- Get status, severity, confidence, evidence, remediation, and limitations for every finding.
+- Use compact JSON in CI or hand targeted evidence to an AI coding tool for explanation and fix planning.
+- Keep the validator deterministic, local, read-only, and independent of dashboard APIs.
+
+## What It Validates
+
+The public beta focuses on AppLovin MAX mediation in Unity. Checks are grouped by the integration areas that most often cause build issues, lost impressions, privacy failures, or silent revenue gaps.
+
+| Area | Examples of validation coverage |
+| --- | --- |
+| **SDK foundation** | MAX SDK import through `Assets` or UPM, duplicate installation risk, supported SDK version, assembly definitions, MAX settings, SDK key evidence, and required project structure. |
+| **Dependency and adapter setup** | External Dependency Manager/EDM4U presence and version, resolver settings, MAX adapter/network detection, dependency XML evidence, Android library resolution, and a mediation network matrix. |
+| **Consent and privacy** | MAX privacy-flow settings, consent/privacy evidence, privacy URL requirements, ATT-related code paths, and conflicts between MAX-managed privacy flow and direct consent/ATT requests. |
+| **Unity and platform readiness** | Unity version policy, Android API levels, Gradle and resolver settings, Android manifest signals, iOS deployment target evidence, and platform-specific configuration available in committed files. |
+| **Keys, app IDs, and ad units** | MAX SDK keys, Google/AdMob app IDs when relevant, ad unit presence by format and platform, duplicate IDs, placement tracking, and default local IDs when remote configuration is used. |
+| **Initialization and lifecycle** | MAX initialization call sites, singular initialization, staged guards, callback subscription timing, initialization failure/completion state handling, and load sequencing after initialization. |
+| **Loading, showing, and retry** | Interstitial and rewarded readiness checks, load/show callback wiring, reload after close or display failure, banner refresh and destruction behavior, retry coverage, and fixed or exponential backoff patterns. |
+| **Events and revenue** | Display, click, impression, paid-revenue, and ad-format callbacks; event forwarding to detected Firebase, AppsFlyer, and Adjust integrations; expected revenue event names and payload fields; and background-callback UI risks. |
+| **Production safety** | Creative Debugger configuration, debug logging, production flags, unsafe UI work in background callbacks, and other release-safety signals. |
+
+Static analysis reports evidence and uncertainty. It does not pretend that a source-code pattern proves runtime behavior.
+
+## AI-Friendly By Design
+
+The validator is built to work with modern coding agents without turning the scanner itself into an opaque AI system.
+
+- **Compact JSON reports** keep the first response small enough for agent context windows.
+- **Full evidence reports** provide the exact files and lines needed for a targeted fix.
+- **MCP support** exposes local read-only scan, summary, finding, and rule-documentation tools to Codex, Claude, and other MCP clients.
+- **Stable rule IDs** let an agent request only the findings that need investigation.
+- **Deterministic results** let the agent explain, suggest, and plan changes without replacing the source-of-truth validator.
+
+A practical workflow is:
+
+1. Run a compact JSON scan.
+2. Give the report to Codex or Claude, or let the MCP server retrieve the summary and selected findings.
+3. Ask the agent to explain each missing or failing integration, identify the likely Unity files to change, and propose a minimal fix plan.
+4. Review and apply the change through your normal development workflow.
+5. Run the validator again to confirm that the static evidence changed as expected.
+
+The validator does not silently edit Unity projects. Automatic approved-fix workflows are future work.
 
 ## Install
 
-Prerequisite: .NET 8 or .NET 9 SDK/runtime.
+The CLI is distributed as a .NET global tool. Install .NET 8, .NET 9, or .NET 10 first, then install the current public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.7
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.8
 ```
 
-Update:
+The installed command is `easy-ads-validator`:
 
 ```bash
-dotnet tool update --global EasyAdsIntegrationValidator
+easy-ads-validator --version
 ```
 
-Uninstall:
+Update an existing installation:
+
+```bash
+dotnet tool update --global EasyAdsIntegrationValidator --version 0.1.0-beta.8
+```
+
+Remove the CLI:
 
 ```bash
 dotnet tool uninstall --global EasyAdsIntegrationValidator
 ```
 
-## Run
+For users who do not want a global .NET tool, self-contained macOS and Windows archives are attached to the [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) page. Verify `checksums.txt` before running an archive; see [Artifact Verification](docs/artifact-verification.md).
 
-From any terminal:
+## First Scan
+
+Point the command at the root folder of a Unity project:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project
 ```
 
-CI-friendly compact JSON:
+Windows PowerShell example:
+
+```powershell
+easy-ads-validator scan "C:\Projects\My Unity Game"
+```
+
+The public beta defaults to the Unity AppLovin MAX profile. The equivalent explicit command is:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --platform unity --mediation max --profile max-unity
+```
+
+The scan is read-only and does not require the Unity Editor to be installed or open.
+
+## Reports
+
+Markdown is the default human-readable output:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --format markdown
+```
+
+For CI and coding agents, write compact JSON:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format json --report-detail compact
 ```
 
-Agent-friendly compact reports:
+Write both formats to a directory:
 
 ```bash
-easy-ads-validator scan <UNITY_PROJECT_PATH> --format markdown,json --report-detail compact --out <REPORT_DIR>
+easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report
 ```
 
-Archive both report formats:
+Include passing rules and full evidence when investigating a finding:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report --include-passes --report-detail full
 ```
 
-Interactive Markdown scans show scan progress and can ask whether to display the report in the terminal or write it to a folder. JSON stdout, redirected output, and explicit `--out` runs do not prompt.
+Interactive terminal Markdown scans show progress and may ask whether to display the report or write it to a file. JSON stdout, redirected output, and explicit `--out` runs do not prompt, so they are safe for automation.
 
-Public beta defaults:
+## CI And MCP
 
-- `--platform unity`
-- `--mediation max`
-- `--profile max-unity`
+Fail CI when high-severity failed findings are present:
 
-## What It Checks
+```bash
+easy-ads-validator scan "$UNITY_PROJECT" --format json --report-detail compact --fail-on high
+```
 
-- MAX SDK import and version evidence.
-- Unity, Android, and iOS project settings.
-- SDK keys, AdMob app IDs when required, ad unit IDs, and placement tracking.
-- MAX initialization ordering and guarding.
-- Consent and privacy evidence before MAX initialization.
-- Required mediated networks and native dependency evidence.
-- Callback wiring, reload/retry behavior, revenue callbacks, and production debug safety.
-
-## What It Does Not Verify
-
-- Dashboard or API configuration.
-- Unity Editor, Gradle, Xcode, simulator, emulator, or device behavior.
-- Runtime proof that ads load, show, or generate revenue.
-- Waterfall, bidding, or server-side reporting correctness.
-- Legal compliance certification.
-- Automatic project modification.
-
-## Exit Codes
+The command returns:
 
 | Code | Meaning |
 | --- | --- |
-| `0` | Scan completed and no failed finding met the configured `--fail-on` threshold. |
-| `1` | Scan completed and at least one failed finding met the configured `--fail-on` threshold. |
-| `2` | Invalid arguments, missing project path, invalid policy, unsupported format/profile, or output path problem. |
-| `3` | Unexpected internal error. |
+| `0` | The scan completed without a failed finding at the configured threshold. |
+| `1` | The scan completed and at least one failed finding met the threshold. |
+| `2` | Arguments, project path, policy, profile, format, or output configuration is invalid. |
+| `3` | An unexpected internal error occurred. |
+
+Install the optional MCP package at the same version as the CLI:
+
+```bash
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.8
+easy-ads-validator-mcp
+```
+
+Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or another MCP client. It delegates to the same deterministic CLI, does not call an LLM, and does not modify Unity files. See the [agent contract](docs/agent-contract.md) for the tool boundary.
+
+## Configuration
+
+Use a local JSON policy when the project needs different thresholds, required networks, API aliases, or other supported policy overrides:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --policy examples/ads-audit.json
+```
+
+Read [Configuration](docs/configuration.md) and inspect the [sample policy](examples/ads-audit.json) before changing defaults.
+
+## Boundaries
+
+This is static repository inspection, not a build or runtime certification. It does not:
+
+- Query AppLovin, AdMob, Firebase, AppsFlyer, Adjust, Apple, Google, or other dashboards/APIs.
+- Run Unity, Gradle, Xcode, an emulator, a simulator, a device, or a game build.
+- Prove that an ad loads, displays, earns revenue, or invokes a callback at runtime.
+- Verify waterfalls, bidding, server-side reporting, or account configuration.
+- Certify GDPR, ATT, TCF, COPPA, or other legal/privacy compliance.
+- Modify the Unity project automatically.
+
+`WARN` and `UNKNOWN` findings are review signals, not proof of runtime failure. Read the confidence, evidence, remediation, and limitations in the report.
 
 ## Documentation
 
-- [Quickstart](docs/quickstart.md)
-- [Configuration](docs/configuration.md)
-- [Agent contract](docs/agent-contract.md)
-- [MAX Unity profile](docs/max-unity-profile.md)
-- [Artifact verification](docs/artifact-verification.md)
+- [Documentation index](docs/index.md): public guide map and recommended workflow.
+- [Quickstart](docs/quickstart.md): install-to-first-scan walkthrough.
+- [Configuration](docs/configuration.md): local JSON policy options.
+- [MAX Unity profile](docs/max-unity-profile.md): supported validation scope.
+- [Agent contract](docs/agent-contract.md): MCP tool behavior and response boundaries.
+- [Artifact verification](docs/artifact-verification.md): checksums and beta trust model.
 
 ## Support And Security
 
-Open non-security issues in the GitHub issue tracker.
+Open reproducible product issues in the [GitHub issue tracker](https://github.com/techdigga/easy-ads-integration-validator/issues). Include the tool version, operating system, command shape, status/exit code, and a redacted report excerpt. Do not upload private Unity projects, credentials, SDK keys, or personal data.
 
 For suspected vulnerabilities, leaked credentials, or private project data exposure, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
 
