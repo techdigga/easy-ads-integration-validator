@@ -1,0 +1,159 @@
+# LevelPlay Unity Profile
+
+The `levelplay-unity` profile provides static Unity LevelPlay mediation checks for SDK `9.0.0` and newer. Known SDK versions before `9.0.0` fail `LP002`; Beta 9 does not claim support for older SDKs.
+
+The profile recognizes the official LevelPlay Unity SDK in two installation forms:
+
+- Direct import under a recognized Unity asset/package root.
+- Unity Package Manager (UPM) metadata and manifest evidence.
+
+The scanner reads committed project files. It uses authoritative UPM metadata and manifest evidence before direct-import metadata when selecting a version. A valid installation without authoritative version evidence produces `UNKNOWN` for `LP002`. Direct and UPM evidence together are treated as a duplicate installation and fail `LP003`, even when both versions are individually valid.
+
+Official integration reference: [Unity LevelPlay package integration](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration).
+
+Direct imports are recognized under `Assets/LevelPlay` and the legacy-compatible `Assets/IronSource` root. UPM uses `com.unity.services.levelplay`; legacy `com.ironsource.mediation` metadata remains recognized for compatibility.
+
+## Rules
+
+Default severities and confidence behavior below are the profile defaults before policy overrides.
+
+| Rule | Check | Default severity | Status and confidence | Remediation |
+| --- | --- | --- | --- | --- |
+| `LP001` | Recognized LevelPlay SDK installation evidence exists through direct import or UPM. | Critical | `PASS`/`FAIL`, high confidence. Missing recognized evidence is `FAIL`. | Install the official Unity LevelPlay SDK through one recognized form and commit its evidence. |
+| `LP002` | The authoritative LevelPlay SDK version is `9.0.0` or newer. | High | Known below-floor or conflicting versions are high-confidence `FAIL`; missing or malformed authoritative version evidence is low-confidence `UNKNOWN`. | Install or retain LevelPlay SDK `9.0.0+`; keep authoritative package metadata consistent. |
+| `LP003` | Direct and UPM LevelPlay installations are not both present. | High | `PASS`/`FAIL`, high confidence. Both forms are `FAIL`. | Remove one installation form and keep a single source of truth. |
+| `LP004` | Recognized LevelPlay settings evidence exists and is parseable. | High | `PASS`/`FAIL`, high confidence. Missing or malformed settings are `FAIL`. | Restore a recognized LevelPlay settings asset and valid contents. |
+| `LP005` | Required LevelPlay assembly-definition evidence exists and is valid. | High | `PASS`/`FAIL`, high confidence. Missing or malformed assembly definitions are `FAIL`. | Restore the required assembly definition from the official Unity package or direct import. |
+| `LP006` | Committed LevelPlay adapter and dependency evidence satisfies the configured network policy. | Medium | Missing policy-required networks, unresolved output, conflicting dependency/resolver versions, and platform gaps are `WARN`; optional networks that are not installed do not fail the rule; unavailable matrix evidence is low-confidence `UNKNOWN`. | Review adapter metadata and resolver output; manual resolution is allowed, but align concrete versions and platform coverage when evidence is committed. |
+| `LP007` | Unity editor version is at least `2022.3.62f2`. | High | A parsed version below the protected minimum is high-confidence `FAIL`; missing or malformed project-version evidence is low-confidence `UNKNOWN`. | Upgrade to Unity `2022.3.62f2` or newer. Unity 6 is recommended when practical for current mobile-ad-network support. |
+| `LP008` | Android minimum API is at least `24` and target API is at least `36`. | High | A parsed value below policy is high-confidence `FAIL`; missing or automatic target settings are low-confidence `UNKNOWN`. | Set the project Android minimum and target API levels to the configured policy values. |
+| `LP009` | External Dependency Manager, GVH resolver settings, Jetifier, resolver output, and custom Gradle-template evidence are reviewable. | Medium | Missing EDM is high-confidence `FAIL`; EDM below `1.2.185` is high-confidence `FAIL`; missing or incomplete committed resolver output is `WARN` because manual resolution can be valid; missing GVH evidence is `UNKNOWN`. | Install EDM `1.2.185` or newer, review GVH/Jetifier settings, and resolve LevelPlay dependencies when appropriate. Keep enabled custom Gradle templates committed. |
+| `LP010` | iOS deployment target is at least `13.0`; `15.0` or newer is recommended. | Medium | Below `13.0` is high-confidence `FAIL`; `13.0` through `14.x` is high-confidence `WARN`; missing or malformed evidence is low-confidence `UNKNOWN`. | Raise the iOS deployment target to `15.0` or newer when possible. |
+| `LP011` | Custom Android manifest ownership and required ad permissions are structurally compatible. | High | Enabled custom-manifest ownership without a committed manifest, or missing required permission evidence, is high-confidence `FAIL`; stale disabled-manifest evidence is high-confidence `WARN`; generated manifest merge output is outside the boundary. | Commit the custom manifest when its Unity toggle is enabled and review `INTERNET`, `ACCESS_NETWORK_STATE`, and `AD_ID` permission evidence. |
+| `LP012` | A source-controlled iOS `NSUserTrackingUsageDescription` value is available when policy requires it. | Medium | Committed iOS settings or source/post-process evidence is high-confidence `PASS`; missing source evidence is low-confidence `UNKNOWN`; generated `Info.plist` and Xcode output are not inferred. | Add or review the source-controlled ATT usage-description value used by the iOS build. |
+| `LP013` | One non-placeholder LevelPlay app key is present for Android and iOS, and visible initialization literals do not conflict with settings. | Critical | Missing platform keys or visible settings/code conflicts are high-confidence `FAIL`; unresolved initialization values are high-confidence `WARN`; malformed or unavailable settings remain low-confidence `UNKNOWN`. | Configure non-placeholder Android and iOS app keys in the recognized settings asset and keep visible initialization values aligned. |
+| `LP014` | Every detected LevelPlay ad format has a non-placeholder local fallback ad-unit ID; duplicate IDs across formats or platform slots fail. | High | Missing or invalid local fallback evidence, or duplicate IDs, are high-confidence `FAIL`; dynamic values alongside a local fallback are high-confidence `WARN`; no detectable format usage is low-confidence `UNKNOWN`. | Keep a committed local fallback ID for each used format and platform. Remote configuration may override it but must not be the only source. |
+| `LP015` | Recognized `ShowAd` calls expose meaningful placement arguments when placements are used. | Low | Missing, placeholder, or statically unresolved placement arguments are high-confidence `WARN`; meaningful literal or field-backed arguments are `PASS`; no recognized show usage is low-confidence `UNKNOWN`. | Pass short, stable placement names to `ShowAd` calls and review dynamic placement values manually. |
+| `LP016` | LevelPlay initialization exists and has one effective direct call site per platform. | Critical | Missing initialization with recognized SDK evidence is high-confidence `FAIL`; duplicate shared/platform call sites are high-confidence `FAIL`; one shared call or one Android and one iOS call is `PASS`. Missing source/API evidence is low-confidence `UNKNOWN`. | Centralize `LevelPlay.Init` so each supported platform has one effective call site. |
+| `LP017` | Initialization is guarded and state transitions are staged. | High | Missing guards or incomplete pre-call/success/failure state evidence are high-confidence `WARN`; visible staged transitions are `PASS`; missing source/API evidence is low-confidence `UNKNOWN`. | Set an initialization state before `LevelPlay.Init`, clear it on failure, and mark the SDK initialized only from the success callback. |
+| `LP018` | Initialization success and failure callbacks are subscribed before initialization. | High | Missing success or failure subscriptions, or a same-method subscription after `LevelPlay.Init`, are high-confidence `FAIL`; cross-method ordering is high-confidence `WARN`; same-method subscriptions before initialization are `PASS`. | Subscribe to both initialization callbacks before calling `LevelPlay.Init`. |
+| `LP019` | Ad loading starts after initialization or on an initialized/guarded path. | High | Early same-method loads are high-confidence `WARN`; visible after-init or guarded paths are `PASS`; unresolved cross-method ordering is high-confidence `WARN`; missing evidence is low-confidence `UNKNOWN`. | Start loads from the initialization success path or protect them with an initialized guard and staged loading. |
+| `LP020` | LevelPlay calls avoid obvious background-thread paths and Unity UI/scene mutation from callbacks. | Low | Obvious risky paths are high-confidence `WARN`; no risky static evidence is `PASS`; missing source/API evidence is low-confidence `UNKNOWN`. | Keep LevelPlay calls on Unity's main thread and dispatch callback UI or scene changes through a main-thread dispatcher. |
+| `LP021` | A CMP, UMP, custom consent flow, or supported LevelPlay privacy configuration is visible in source. | High | Visible flow or supported API evidence is high-confidence `PASS`; missing C# evidence is low-confidence `UNKNOWN`. This does not judge legal sufficiency. | Add or review one consent owner and apply its result through the supported LevelPlay privacy APIs. |
+| `LP022` | Visible consent configuration occurs before `LevelPlay.Init` when same-method source order is available. | High | Same-method consent after initialization is high-confidence `FAIL`; same-method consent before initialization is `PASS`; cross-method ordering is high-confidence `WARN`; missing evidence is low-confidence `UNKNOWN`. | Complete consent handling before `LevelPlay.Init`, or make the ordering explicit through a guarded initialization path. |
+| `LP023` | Direct consent setters, raw consent-string mutation, and multiple consent-flow families are reviewed. | Medium | Direct setters, raw consent-string writes, or conflicting flow families are high-confidence `WARN`; no risky static pattern is `PASS`; missing index evidence is low-confidence `UNKNOWN`. | Keep one consent owner, avoid manual consent-string mutation, and review direct `SetConsent` or metadata calls. |
+| `LP024` | A source-controlled privacy URL and ATT ownership path are reviewable. | High | A valid source HTTPS URL without a visible ATT conflict is `PASS`; non-HTTPS URLs or direct ATT requests alongside a consent flow are `WARN`; incomplete source evidence is low-confidence `UNKNOWN`. Generated `Info.plist` and Xcode output are outside the boundary. | Provide a production HTTPS privacy URL and keep ATT ownership consistent with the selected consent flow. |
+| `LP025` | Visible COPPA, child-directed, under-age, or age-restricted signals are configured before initialization. | Low | Same-method pre-init audience signals are `PASS`; post-init or cross-method signals are high-confidence `WARN`; missing signals are low-confidence `UNKNOWN` because applicability is project-specific. | If applicable, configure audience signals before `LevelPlay.Init` and keep one source of truth. |
+| `LP026` | Used interstitials have the required loaded, load-failed, display-failed, and closed callback subscriptions; displayed and clicked callbacks remain optional. | Medium | Missing required callbacks are high-confidence `FAIL`; missing displayed/clicked callbacks are low-severity `WARN`; no visible interstitial use is low-confidence `UNKNOWN`. | Wire the required interstitial lifecycle callbacks and add displayed/clicked tracking when needed. |
+| `LP027` | Used rewarded ads have the required loaded, load-failed, display-failed, and closed callback subscriptions; displayed, clicked, and rewarded callbacks remain optional. | High | Missing required callbacks are high-confidence `FAIL`; missing optional callbacks are low-severity `WARN`; no visible rewarded use is low-confidence `UNKNOWN`. | Wire the required rewarded lifecycle callbacks and review optional tracking/reward events for the product flow. |
+| `LP028` | Used banners have reviewable lifecycle callback subscriptions. | Medium | Incomplete banner callback evidence is a `WARN`; missing banner callbacks do not fail because integrations may intentionally use only part of the lifecycle. No visible banner use is low-confidence `UNKNOWN`. | Review banner lifecycle subscriptions and retain only the events required by the integration. |
+| `LP029` | LevelPlay callback subscriptions do not duplicate active known events or target unsupported LevelPlay-looking event names. | Medium | Duplicate or unsupported subscriptions are high-confidence `WARN`; no callback evidence is low-confidence `UNKNOWN`; unsubscribes are ignored for duplicate detection. | Register each callback once from a central path and use only events exposed by the API reference. |
+| `LP030` | Used interstitial and rewarded `ShowAd` calls are guarded by matching `IsAdReady` checks. | Medium | Unguarded or indirectly guarded show paths warn; no fullscreen show usage is `UNKNOWN`; runtime callback delivery is outside the boundary. | Check readiness on the matching ad object before every fullscreen show call. |
+| `LP031` | Fullscreen load/display failure callbacks have retry or reload evidence. | Medium | Direct immediate reload warns for missing delay; indirect event-bus delivery remains advisory; app-open and runtime behavior are outside the boundary. | Reload from failure callbacks and use a fixed delay or bounded backoff. |
+| `LP032` | Fullscreen retry behavior has visible delay, cap, or backoff evidence. | Medium | Static analysis cannot prove runtime retry limits; missing retry evidence remains `UNKNOWN` because LP031 owns retry existence. | Add a retry cap, fixed delay plus limit, exponential backoff, or a maximum delay clamp. |
+| `LP033` | Fullscreen load-failed, display-failed, and closed callbacks reload or signal another ad. | Medium | Arbitrary downstream event-bus delivery is not proven; missing terminal callback evidence is `UNKNOWN`. | Reload or signal the next fullscreen ad from every terminal callback path. |
+| `LP034` | Initial LevelPlay loading is staged behind initialization callbacks, guards, or delays. | Low | This is a best-practice advisory and does not prove runtime sequencing. | Start the first load after initialization success and stage later formats behind a guard or delay. |
+| `LP035` | Optional impression-data revenue callbacks are present for used LevelPlay formats when revenue intent is visible. | Medium | Revenue forwarding is optional; missing project-wide callback evidence remains a warning and static analysis cannot prove runtime delivery. | Subscribe to `OnAdImpressionDataReady` for each used format before forwarding impression revenue. |
+| `LP036` | Detected Firebase Analytics, AppsFlyer, and Adjust revenue contracts have canonical event/API and required field evidence. | Medium | No detected provider keeps the rule neutral; provider event delivery, dashboard ingestion, and indirect runtime pipelines are not proven. | Forward LevelPlay impression revenue through each detected provider's canonical contract with value, currency, and network/mediation fields where required. |
+| `LP037` | LevelPlay revenue handlers preserve useful impression fields and avoid direct Unity UI/scene mutation without main-thread dispatch. | Low | Payload completeness and thread affinity are heuristic; generated code and runtime callback behavior are outside the boundary. | Preserve revenue, network, format, and instance data where available, and dispatch UI/scene work to Unity's main thread. |
+| `LP038` | LevelPlay adapter-debug settings are disabled for production. | Medium | Reads committed LevelPlay settings only; it cannot prove which Unity configuration was used for a particular build. | Disable `EnableAdapterDebug` before release unless the release intentionally requires adapter diagnostics. |
+| `LP039` | LevelPlay Integration Helper and `ValidateIntegration` diagnostics are not left active unexpectedly. | Low | Static analysis reports settings and API call evidence; it cannot prove whether a call is reachable in a release build. | Use Integration Helper during development, then disable the setting and remove `ValidateIntegration` from release paths. |
+| `LP040` | LevelPlay debug, test, and verbose hooks are reviewed for production safety. | Medium | Debug logs and test literals are heuristic; compile defines, wrappers, and generated/native code may not be visible. | Remove production debug/test hooks or guard them to development-only build paths before release. |
+
+Every non-pass finding includes evidence paths where available, remediation, confidence, and this official documentation link. Pass findings do not require a documentation link. Policy severity overrides affect severity, not status semantics.
+
+## Platform Rule Semantics
+
+The platform rules inspect committed Unity project evidence only:
+
+- `LP007` reads `ProjectSettings/ProjectVersion.txt` and compares the Unity editor version using a Unity-aware parser that handles suffixes such as `f2`.
+- `LP008` reads recognized Unity Android API settings and reports `UNKNOWN` when Unity leaves the target API automatic or no authoritative value is committed.
+- `LP009` checks External Dependency Manager package/settings evidence, `ProjectSettings/GvhProjectSettings.xml`, Jetifier, committed resolver output, and the relationship between enabled custom Gradle toggles and template files. Resolver output is advisory because a team may resolve dependencies manually before building.
+- `LP006` reviews the profile-owned adapter matrix against `requiredNetworks`. Missing optional networks are not failures; required missing networks, concrete dependency/resolver version disagreements, unresolved evidence, and detected platform gaps are advisory warnings.
+- `LP010` reads committed Unity iOS deployment-target settings. It treats `13.0` as the protected minimum and warns below the recommended `15.0` target.
+- `LP011` checks only project-owned Android manifest evidence. It does not claim to predict the final merged manifest generated during a Unity build.
+- `LP012` checks committed iOS settings, source literals, and source post-process evidence for `NSUserTrackingUsageDescription`. Generated `Info.plist` and generated Xcode projects are intentionally outside the scanner boundary.
+- `LP013` reads parsed LevelPlay settings fields and visible `LevelPlay.Init` or approved legacy initialization arguments. It compares resolvable literals without claiming that runtime environment selection or remote secrets are correct.
+- `LP014` recognizes LevelPlay ad-unit constructors and official API type/method evidence. It resolves string literals and literal-backed fields as local fallbacks, detects duplicates across format/platform-named fields, and treats unresolved remote-only values as insufficient fallback evidence.
+- `LP015` recognizes the SDK's `ShowAd` method token from the LevelPlay API reference. It does not require a project-specific placement naming convention and does not infer dashboard placement configuration.
+- `LP016` matches the SDK's initialization API reference, including approved policy aliases, and treats one shared call or mutually exclusive Android/iOS call sites as one effective initialization path. It does not prove runtime platform selection or reflection-based calls.
+- `LP017` inspects simple guards and assignments in the syntax index. It is a heuristic: it can confirm visible staged state transitions but cannot prove every lifecycle path, exception path, or callback execution order.
+- `LP018` matches the SDK's success/failure initialization event symbols and supports instance-style event targets through API member names. Same-method ordering is checked by source location; cross-method control flow remains a warning.
+- `LP019` matches official `LoadAd` symbols from the API reference, including instance-style method targets. Loads reached through bounded helper, scheduled, and custom-event paths from `OnInitSuccess` are also recognized; runtime callback completion and timing remain unproven.
+- `LP020` reports obvious method-name background heuristics and Unity UI/scene calls inside recognized LevelPlay callback handlers, including bounded helper and custom-event paths. It cannot prove actual thread affinity or runtime dispatcher behavior.
+- `LP021` recognizes CMP/UMP/custom consent-flow tokens and the SDK 9+ privacy API reference. It reports source evidence only and does not certify consent UX, regional coverage, or legal compliance.
+- `LP022` compares consent and initialization locations only when both are visible in the same source method. Cross-method execution is intentionally a warning rather than an inferred pass or failure.
+- `LP023` warns on supported consent setters, raw consent-string assignments/fields/literals, and multiple recognizable flow families. It does not decide which consent provider is authoritative.
+- `LP024` checks source-controlled privacy URL settings or privacy-context URL literals and direct ATT request tokens. Generated `Info.plist`, generated Xcode projects, native binaries, and runtime ATT behavior are outside the static boundary.
+- `LP025` recognizes audience and age-signal API names, fields, assignments, and literals. Missing signals are not treated as a legal or product failure because applicability depends on the app and audience.
+- `LP026` and `LP027` use the normalized SDK API reference to match format-specific instance or static callback subscriptions. Shared method names alone do not mark another ad format as used; a format-specific receiver/type token is also required.
+- `LP028` treats banner lifecycle coverage as advisory and does not fail when optional banner events are absent.
+- `LP029` groups active known subscriptions by event target to detect duplicates and compares LevelPlay-looking targets against the normalized API reference to identify unsupported event names. Unsubscribe expressions are excluded from duplicate evidence.
+- `LP030`-`LP034` use the SDK 9+ API reference to evaluate fullscreen readiness, failure retry/reload, bounded backoff, terminal reload signaling, and staged loading. Failure and terminal recovery can follow bounded helper, scheduled, and custom-event paths; wrappers, reflection, event buses without indexed subscriptions, and runtime scheduling remain advisory.
+- `LP035`-`LP037` use the SDK 9+ impression-data callback reference plus the LevelPlay-owned Firebase/AppsFlyer/Adjust inventory. Revenue payload and thread/UI evidence can follow bounded helper and event paths, while provider forwarding remains project-wide because analytics calls do not need to be lexically inside a LevelPlay callback. Missing provider forwarding is only actionable when revenue intent is visible; no provider or no intent is neutral.
+- `LP038` reads parsed LevelPlay settings fields for adapter debugging. It is an advisory release check and does not inspect Unity's generated build output.
+- `LP039` uses the API reference's `DebugApi` symbols, including `LevelPlay.ValidateIntegration`, together with the serialized Integration Helper setting. Static analysis cannot prove reachability or build configuration.
+- `LP040` combines API-backed diagnostic calls with conservative debug/test/verbose log and literal heuristics. A guarded finding remains a warning because static syntax analysis cannot prove the final release path.
+- Callback handler UI and scene safety remains owned by `LP020`; these callback rules do not attempt to prove runtime callback delivery or thread affinity.
+
+The default platform thresholds are policy-protected. Local policy may raise them, but invalid or weaker overrides are ignored and produce a policy diagnostic. SKAdNetwork identifier validation is intentionally deferred to a later backlog item and is not claimed by `LP012`.
+
+The platform settings and resolver workflow align with Unity's [LevelPlay developer tools](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/developer-tools) guidance. These rules do not replace Unity, EDM4U, Gradle, CocoaPods, or Xcode validation.
+
+### LP004 Settings Semantics
+
+`LP004` parses the recognized serialized settings assets instead of treating a filename or root marker as sufficient evidence. A valid asset must contain a recognized `LevelPlaySettings`, `IronSourceSettings`, or `IronSourceMediationSettings` root and nonblank `AndroidAppKey` and `IOSAppKey` fields. The parser also validates known boolean settings such as `EnableIronsourceSDKInitAPI`, `EnableAdapterDebug`, and `EnableIntegrationHelper`; unknown serialized fields are tolerated for forward compatibility.
+
+When more than one recognized settings asset is present, the scanner compares shared nonempty field values. Conflicting values fail `LP004` and include the settings paths for review. This is a structural check only: app-key quality, platform-specific credential correctness, initialization behavior, and runtime consent behavior are separate rules. The expected fields follow Unity's [LevelPlay mediation settings documentation](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/developer-tools) and the published [`IronSourceMediationSettings` API](https://docs.unity.cn/Packages/com.unity.services.levelplay%408.5/api/GlobalNamespace.IronSourceMediationSettings.html).
+
+## Adapter Matrix
+
+LevelPlay reports include a profile-owned adapter matrix when matrix evidence is available. Matrix rows describe only committed static evidence:
+
+| Status | Meaning |
+| --- | --- |
+| `missing` | No recognized adapter evidence was found for the network. |
+| `resolved` | Committed resolver evidence contains matching adapter evidence. This does not prove that Unity, Gradle, CocoaPods, or a device resolved it. |
+| `needs-resolution-evidence` | Adapter or dependency evidence exists, but committed resolver output was not found. |
+| `conflict` | Static adapter or dependency evidence conflicts. |
+| `platform-gap` | The project contains evidence for a platform, but the detected adapter has no matching dependency evidence for that platform. |
+
+The matrix can include installed adapter identifiers, Android/iOS version strings, dependency metadata, resolver evidence, platform-gap status, and source paths. Dynamic ranges remain static evidence; the CLI does not resolve them. A version conflict includes both multiple concrete versions on one platform and disagreement between dependency metadata and resolver output.
+
+## API Reference Foundation
+
+The profile now exposes a normalized LevelPlay SDK 9+ API reference for code rules. It combines:
+
+- public declarations extracted from committed SDK source under recognized direct-import roots and `Packages/<recognized-package-id>`;
+- an embedded fallback reference for the documented `Unity.Services.LevelPlay` initialization, ad-unit, callback, impression-revenue, and consent/privacy surface, including the nullable impression fields and `AllData` payload view;
+- a small allowlist of official `IronSource.Agent` migration aliases and optional policy aliases.
+
+The API reference preserves source evidence when declarations are extracted. It is audit data for later rules; this foundation does not by itself claim that an app initializes, loads, shows, or forwards revenue correctly. The reference is maintained against the official [LevelPlay Init API](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/migrate-to-init-api), [interstitial API](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/migrate-interstitial-ad-unit-api), [rewarded API](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/migrate-rewarded-ad-unit-api), [banner API](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/migrate-banner-ad-unit-api), and [impression-level revenue API](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/impression-level-revenue-integration) documentation.
+
+## Static Boundary
+
+Beta 9 is source inspection only. It checks visible LevelPlay callback subscriptions, initialization/load call patterns, and consent/privacy/audience source patterns, but it does not validate runtime callback delivery, loading/showing behavior, legal consent sufficiency, dashboard configuration, network APIs, generated Unity builds, final Gradle dependency resolution, Xcode output, native output, emulator/device behavior, or runtime logs. It does not modify the Unity project. Missing generated or uncommitted evidence may therefore be `UNKNOWN` rather than proof of a runtime failure.
+
+The profile is selected explicitly with:
+
+```bash
+easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
+easy-ads-validator scan ./MyUnityProject --profile levelplay-unity --format json --summary-only
+```
+
+The default profile remains `max-unity` for existing invocations.
+
+LevelPlay callback, loading, retry, terminal-reload, and revenue rules use the same static-analysis boundary as MAX: direct SDK API references are preferred, while bounded helper/event paths can be recognized when the source index proves the relationship. Reflection, dynamic delegates, remote-only configuration, generated build output, and runtime callback delivery remain review items rather than claims of proof.
+
+## Acceptance Coverage
+
+The LevelPlay profile's focused tests cover the evidence states used across the rule groups:
+
+- valid direct-import and UPM installations, including SDK `9.0.0+` version evidence;
+- missing, malformed, duplicate, and below-floor installation/settings evidence;
+- platform-specific Android and iOS settings, dependency matrix resolution, version conflicts, and platform gaps;
+- wrapper and API-reference-backed method/event patterns, including conservative reflection or unresolved-path warnings;
+- initialization, consent, loading, callback, revenue, analytics, and production-safety paths;
+- cross-platform and cross-method evidence where the scanner must report a warning or unknown result instead of claiming runtime order.
+
+These tests validate the static evidence contract. They do not turn source fixtures into claims about Unity build output, runtime delivery, dashboard configuration, or device behavior.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0-beta.9
+
+Ninth public beta for Easy Ads Integration Validator.
+
+- Added the Unity LevelPlay mediation profile for SDK `9.0.0+`, with LP001-LP040 coverage across installation, settings, platform configuration, credentials, ad units, initialization, consent, callbacks, loading, revenue, analytics, adapter dependencies, and production safety.
+- Added LevelPlay API-aware static evidence and an adapter/network matrix that reports committed dependency and platform evidence without claiming Unity or native build resolution.
+- Added profile-aware MCP rule documentation so Codex, Claude, and compatible clients can request the matching MAX or LevelPlay remediation guidance.
+- Preserved MAX as the default profile and retained the deterministic, read-only, static-analysis boundary.
+
+This beta does not verify dashboard setup, runtime ad serving, device logs, generated build output, or legal compliance.
+
 ## 0.1.0-beta.8
 
 Eighth public beta for Easy Ads Integration Validator.

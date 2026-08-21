@@ -18,12 +18,35 @@ Use full evidence only when a human or agent needs line-level context:
 easy-ads-validator scan <UNITY_PROJECT_PATH> --format markdown,json --include-passes --report-detail full --out <FULL_REPORT_DIR>
 ```
 
+LevelPlay Beta 9 examples:
+
+```bash
+easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
+easy-ads-validator scan ./MyUnityProject --profile levelplay-unity --format json --summary-only
+```
+
+The equivalent MCP `scan_project` request is:
+
+```json
+{
+  "projectPath": "/absolute/path/to/unity-project",
+  "mediation": "levelplay",
+  "profile": "levelplay-unity",
+  "reportDetail": "compact",
+  "includePasses": false
+}
+```
+
+`mediation` and `profile` are optional and default to `max` and `max-unity` for backward-compatible MAX scans. LevelPlay requests must supply `levelplay` and `levelplay-unity` as a matching pair. Use the compact summary first, then request individual `LP001`-`LP040` findings through MCP when evidence is needed. Use `get_rule_docs` with `profile: "levelplay-unity"` to retrieve the matching rule explanation. The LevelPlay profile is static-only and supports SDK `9.0.0+`; known pre-v9 versions fail its version check.
+
 ## Interpreting Findings
 
 - `FAIL`: actionable release risk.
 - `WARN`: likely issue or project-specific manual review.
 - `UNKNOWN`: static evidence is incomplete.
 - `INTERNAL_WARN`: the scanner could not complete one rule and emitted diagnostics.
+
+For LevelPlay, `FAIL` is a high-confidence static integration problem, `WARN` is a review signal for unresolved evidence or source-level callback/load/thread risks, and `UNKNOWN` means committed files cannot prove the result. None of these statuses certifies callback delivery, runtime behavior, dashboards, generated builds, or native dependency resolution.
 
 Agents should triage findings in this order:
 

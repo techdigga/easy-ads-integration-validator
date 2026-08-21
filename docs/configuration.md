@@ -1,6 +1,6 @@
 # Configuration
 
-The MVP supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not implemented in the MVP.
+The public beta supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not implemented. Select `levelplay-unity` with `--profile levelplay-unity` for LevelPlay SDK 9+ scans; the default remains `max-unity`. MAX-specific policy values under `maxUnity` apply only to MAX scans.
 
 ## Policy schema
 
@@ -118,7 +118,7 @@ Valid severities are `info`, `low`, `medium`, `high`, and `critical` case-insens
 
 ## Required networks
 
-`maxUnity.requiredNetworks` drives rules that compare expected mediated demand sources with static dependency evidence. The default list is:
+`maxUnity.requiredNetworks` drives MAX rules that compare expected mediated demand sources with static dependency evidence. LevelPlay scans use the LevelPlay profile's adapter catalog and matrix policy. The default MAX list is:
 
 - `google-admob`
 - `unity-ads`

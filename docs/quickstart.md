@@ -1,13 +1,13 @@
 # Quickstart
 
-This walkthrough takes a Unity developer from installation to a first AppLovin MAX audit. For the complete public guide map and support links, see the [Documentation index](index.md) and [README](../README.md).
+This walkthrough takes a Unity developer from installation to a first AppLovin MAX or Unity LevelPlay audit. For the complete public guide map and support links, see the [Documentation index](index.md) and [README](../README.md).
 
 ## 1. Install The CLI
 
 Install .NET 8, .NET 9, or .NET 10, then install the public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.8
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.9
 ```
 
 Verify the command:
@@ -52,6 +52,15 @@ easy-ads-validator scan /path/to/unity-project --platform unity --mediation max 
 ```
 
 The command reads committed project files only. It does not open Unity or change the project.
+
+For Unity LevelPlay Beta 9, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
+
+```bash
+easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
+easy-ads-validator scan ./MyUnityProject --profile levelplay-unity --format json --summary-only
+```
+
+LevelPlay recognizes direct imports under `Assets/LevelPlay` and legacy-compatible `Assets/IronSource`, plus UPM package IDs `com.unity.services.levelplay` and legacy `com.ironsource.mediation`. It checks `LP001`-`LP040`, including initialization, source-level callback/load ordering, consent, privacy URL, ATT ownership, audience-signal evidence, duplicate or unsupported callback subscriptions, revenue forwarding, and production-safety review. See the [Unity LevelPlay package integration guide](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration).
 
 ## 3. Choose Report Output
 
@@ -116,7 +125,7 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.8
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.9
 easy-ads-validator-mcp
 ```
 
@@ -125,3 +134,5 @@ Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or a
 ## 7. Beta Limits
 
 The validator is a public beta. It does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.
+
+For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 9. A `resolved` matrix row means only that committed resolver evidence was found.

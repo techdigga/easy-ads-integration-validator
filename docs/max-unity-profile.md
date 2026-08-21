@@ -2,6 +2,8 @@
 
 The `max-unity` profile implements static MAX mediation checks. Default severities below are the rule defaults before policy overrides.
 
+LevelPlay is a separate profile. See the [LevelPlay Unity profile](levelplay-unity-profile.md) for SDK `9.0.0+`, `LP001`-`LP040`, and LevelPlay adapter-matrix behavior.
+
 Static-analysis limits apply to all rules: the scanner reads committed repository files only, parses C# syntax without semantic compilation, and does not run Unity, mobile builds, SDKs, ad platforms, or device flows.
 
 Many MAX rules use the shared MAX SDK API reference. The reference is extracted from committed `Assets/MaxSdk/Scripts` files when available, falls back to an embedded MAX Unity reference, and can be extended with local `maxUnity.apiAliases` policy entries for project wrappers.
@@ -27,15 +29,15 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 | `MAX012` | Checks iOS deployment target against hard minimum `13.0` and recommended target `15.0`. | Medium | Missing, conflicting, or unparsable iOS target evidence is `UNKNOWN`. | Use iOS deployment target `15.0+` when possible; below `13.0` fails. |
 | `MAX013` | Checks ATT usage description source evidence, including MAX consent-flow privacy URL and base usage description. | High | Does not inspect generated Info.plist/Xcode output and does not prove runtime ATT behavior. | Configure MAX Terms and Privacy Policy Flow with a production HTTPS privacy URL and base tracking usage description, or provide project-owned source plist/postprocess evidence. |
 | `MAX014` | Skips strict SKAdNetwork validation pending the dedicated SKAN source model. | High | Missing SKAN evidence does not warn or fail in this pass. | No immediate action; revisit after the SKAN deep-dive rule is implemented. |
-| `MAX015` | Checks project-authored Android manifest ownership and ad permission evidence. | High | Does not inspect the final merged manifest and does not require AppLovin build-time entries in source manifests. | If using a custom manifest, commit it with `INTERNET`, `ACCESS_NETWORK_STATE`, and `AD_ID` where required. |
-| `MAX021` | Checks Google/AdMob app IDs from AppLovin settings when Google demand is required. | High | Does not query AdMob and does not inspect generated platform output. | Configure valid Android and iOS Google app IDs in AppLovin settings and avoid placeholder test IDs. |
+| `MAX015` | Checks project-authored Android manifest ownership and ad permission evidence, with additional recognition of deterministic `AD_ID` additions from Android build/post-process source. | High | Does not inspect the final merged manifest; dynamic or ambiguous build-time permission mutations remain advisory. | If using a custom manifest, commit it with `INTERNET`, `ACCESS_NETWORK_STATE`, and `AD_ID` where required, or verify a deterministic Android build-time source adds `AD_ID`. |
+| `MAX021` | Checks Google/AdMob app IDs from AppLovin settings or recognizable source-controlled Android/iOS build and post-process assignments when Google demand is required. | High | Does not query AdMob or inspect generated platform output; dynamic or ambiguous build-time values remain advisory. | Configure valid Android and iOS Google app IDs in AppLovin settings or a deterministic build-time source, and avoid placeholder test IDs. |
 
 ## SDK Keys, App IDs, And Ad Units
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
 | `MAX020` | Requires valid SDK key evidence in `AppLovinSettings.asset`; deprecated `MaxSdk.SetSdkKey(...)` usage warns when settings are valid. | Critical | Does not validate the key against AppLovin and does not allow runtime calls to replace the settings asset. | Configure the SDK key in `AppLovinSettings.asset`, remove placeholder/conflicting values, and remove `SetSdkKey` calls. |
-| `MAX022` | Checks each detected MAX ad format for non-placeholder local fallback ad unit IDs and blocks obvious duplicate reuse. | High | Cannot validate dashboard state or remote config values that are not committed. | Define real ad unit IDs by format/platform in committed config or code, and avoid Google sample IDs or shared IDs across incompatible slots. |
+| `MAX022` | Checks each detected MAX ad format for non-placeholder local fallback ad unit IDs from code, project settings, and bounded serialized asset/config evidence, and blocks obvious duplicate reuse. | High | Cannot validate dashboard state or remote-only values; unresolved remote paths are reported for manual review. | Define real ad unit IDs by format/platform in committed config or code, keep local fallbacks when remote configuration is used, and avoid Google sample IDs or shared IDs across incompatible slots. |
 | `MAX023` | Checks placement names on direct MAX show calls and banner/MREC placement setters. | Low | Missing or dynamic placement evidence warns; random unrelated placement strings no longer satisfy the rule. | Pass short placement/source names to show calls or placement setters; direct placement values over 24 characters fail. |
 
 ## Initialization
@@ -75,7 +77,7 @@ The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, o
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
-| `MAX050` | Compares `requiredNetworks` with detected adapter/dependency evidence, including common MAX adapter aliases such as `google-adapter`, `facebook-adapter`, and `bytedance-adapter`. | High | Incomplete dependency evidence returns `UNKNOWN`; no dashboard/API confirmation. | Add required adapter/dependency evidence or adjust policy network list. |
+| `MAX050` | Compares `requiredNetworks` with detected adapter/dependency evidence, including common MAX adapter aliases such as `google-adapter`, `facebook-adapter`, and `bytedance-adapter`; absent policy-listed networks warn for review. | High | Incomplete dependency evidence returns `UNKNOWN`; no dashboard/API confirmation. | Add the desired adapter/dependency evidence or adjust the policy network list. |
 | `MAX051` | Checks native dependency evidence for required networks. | High | Missing committed dependency files may produce `UNKNOWN` or `WARN`. | Commit resolver XML, Gradle, pods, postprocess, or plugin evidence for required networks. |
 | `MAX052` | Neutral compatibility rule; direct mediated SDK initialization is not checked in the current MAX Unity profile. | Low | No mediated SDK initialization claim is made because direct setup can be legitimate for another integration. | Review adapter documentation separately when an adapter requires additional setup. |
 
@@ -83,8 +85,8 @@ The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, o
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
-| `MAX060` | Requires loaded, load-failed, display-failed, and hidden interstitial callbacks; display-failed recovery is reviewed and display/click tracking is low priority. | Medium | Detects subscriptions and visible handler calls syntactically, not runtime dispatch. | Wire the four core callbacks and check readiness before reloading or scheduling an interstitial after display failure. |
-| `MAX061` | Requires loaded, load-failed, display-failed, and hidden rewarded callbacks; reward-grant, display, and click callbacks are not required. | High | Detects subscriptions and visible handler calls syntactically only. | Wire the four core callbacks and check readiness before reloading or scheduling a rewarded ad after display failure. |
+| `MAX060` | Requires loaded, load-failed, display-failed, and hidden interstitial callbacks; display-failed recovery is reviewed through bounded helper, scheduled, and event-subscriber paths, while display/click tracking is low priority. | Medium | Static traversal follows indexed method and custom-event relationships up to a bounded depth; reflection, dynamic delegates, and runtime dispatch remain unproven. | Wire the four core callbacks and check readiness before reloading or scheduling an interstitial after display failure. |
+| `MAX061` | Requires loaded, load-failed, display-failed, and hidden rewarded callbacks; reward-grant, display, and click callbacks are not required. Display-failed recovery is reviewed through bounded helper, scheduled, and event-subscriber paths. | High | Static traversal follows indexed method and custom-event relationships up to a bounded depth; reflection, dynamic delegates, and runtime dispatch remain unproven. | Wire the four core callbacks and check readiness before reloading or scheduling a rewarded ad after display failure. |
 | `MAX062` | Checks banner/MREC callbacks when banner or MREC use exists; missing click-only evidence is low severity. | Medium | Returns `UNKNOWN` when banner/MREC use is absent. | Wire relevant banner and MREC load/fail callbacks; add click callbacks when useful for analytics or debugging. |
 | `MAX063` | Neutral compatibility rule; app-open callback validation is not checked by default. | Medium | App-open validation is intentionally deferred. | No action required by this rule. |
 | `MAX064` | Detects duplicate MAX callback subscriptions and repeatable lifecycle registrations without a visible guard or matching unsubscribe. | Medium | Lifecycle semantics are approximated from syntax. | Register callbacks once centrally, guard registration, or unsubscribe from `OnDisable`/teardown. |
