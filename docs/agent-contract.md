@@ -18,7 +18,7 @@ Use full evidence only when a human or agent needs line-level context:
 easy-ads-validator scan <UNITY_PROJECT_PATH> --format markdown,json --include-passes --report-detail full --out <FULL_REPORT_DIR>
 ```
 
-LevelPlay Beta 9 examples:
+LevelPlay Beta 10 examples:
 
 ```bash
 easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown

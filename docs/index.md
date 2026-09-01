@@ -41,7 +41,7 @@ For LevelPlay, use the compact-first MCP workflow: call `read_report_summary` fi
 
 ## Public Scope
 
-The historical MVP was MAX-only, but the current Beta 9 supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. LevelPlay Beta 9 supports SDK `9.0.0+`; known pre-v9 versions fail validation. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification.
+The historical MVP was MAX-only, but the current Beta 10 supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. LevelPlay Beta 10 supports SDK `9.0.0+`; known pre-v9 versions fail validation. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification.
 
 ## Support
 

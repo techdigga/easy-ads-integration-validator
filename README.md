@@ -16,7 +16,7 @@ Easy Ads Integration Validator is a developer-first static audit tool for Unity 
 
 ## What It Validates
 
-The public beta supports AppLovin MAX mediation and Unity LevelPlay mediation in Unity. MAX remains the default profile. LevelPlay Beta 9 supports the Unity LevelPlay SDK at `9.0.0+` and covers the same static integration areas with LevelPlay-specific APIs, settings, callbacks, loading, revenue, and adapter evidence.
+The public beta supports AppLovin MAX mediation and Unity LevelPlay mediation in Unity. MAX remains the default profile. LevelPlay Beta 10 supports the Unity LevelPlay SDK at `9.0.0+` and covers the same static integration areas with LevelPlay-specific APIs, settings, callbacks, loading, revenue, and adapter evidence.
 
 The coverage table uses both mediation profiles: MAX terminology identifies the default profile, while LevelPlay applies the corresponding SDK 9+ APIs, settings, adapters, app keys, callbacks, and policy-owned evidence.
 
@@ -32,7 +32,7 @@ The coverage table uses both mediation profiles: MAX terminology identifies the 
 | **Events and revenue** | Display, click, impression, paid-revenue, and ad-format callbacks for both profiles; event forwarding to detected Firebase, AppsFlyer, and Adjust integrations; expected revenue event names and payload fields; and background-callback UI risks. |
 | **Production safety** | MAX Creative Debugger or LevelPlay diagnostic settings, debug logging, production flags, unsafe UI work in background callbacks, and other release-safety signals. |
 
-### Unity LevelPlay Beta 9
+### Unity LevelPlay Beta 10
 
 Select the `levelplay-unity` profile explicitly:
 
@@ -83,7 +83,7 @@ The validator does not silently edit Unity projects. Automatic approved-fix work
 The CLI is distributed as a .NET global tool. Install .NET 8, .NET 9, or .NET 10 first, then install the current public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.9
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.10
 ```
 
 The installed command is `easy-ads-validator`:
@@ -95,7 +95,7 @@ easy-ads-validator --version
 Update an existing installation:
 
 ```bash
-dotnet tool update --global EasyAdsIntegrationValidator --version 0.1.0-beta.9
+dotnet tool update --global EasyAdsIntegrationValidator --version 0.1.0-beta.10
 ```
 
 Remove the CLI:
@@ -176,7 +176,7 @@ The command returns:
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.9
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.10
 easy-ads-validator-mcp
 ```
 
@@ -225,7 +225,7 @@ This is static repository inspection, not a build or runtime certification. It d
 - [Quickstart](docs/quickstart.md): install-to-first-scan walkthrough.
 - [Configuration](docs/configuration.md): local JSON policy options.
 - [MAX Unity profile](docs/max-unity-profile.md): supported MAX validation scope.
-- [LevelPlay Unity profile](docs/levelplay-unity-profile.md): Beta 9 support for SDK `9.0.0+`, `LP001`-`LP040`, and static installation, platform, credential, dependency, initialization, callback, loading, revenue, consent, privacy, production-safety, and audience evidence.
+- [LevelPlay Unity profile](docs/levelplay-unity-profile.md): Beta 10 support for SDK `9.0.0+`, `LP001`-`LP040`, and static installation, platform, credential, dependency, initialization, callback, loading, revenue, consent, privacy, production-safety, and audience evidence.
 - [Agent contract](docs/agent-contract.md): MCP tool behavior and response boundaries.
 - [Artifact verification](docs/artifact-verification.md): checksums and beta trust model.
 

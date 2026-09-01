@@ -31,7 +31,7 @@ GitHub artifact attestations are planned for a future automated release workflow
 NuGet tool install remains the preferred path for most users:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.9
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.10
 ```
 
 Direct binary archives are intended for users who do not want a global .NET tool install.

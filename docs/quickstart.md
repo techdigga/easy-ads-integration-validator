@@ -7,7 +7,7 @@ This walkthrough takes a Unity developer from installation to a first AppLovin M
 Install .NET 8, .NET 9, or .NET 10, then install the public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.9
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.10
 ```
 
 Verify the command:
@@ -53,7 +53,7 @@ easy-ads-validator scan /path/to/unity-project --platform unity --mediation max 
 
 The command reads committed project files only. It does not open Unity or change the project.
 
-For Unity LevelPlay Beta 9, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
+For Unity LevelPlay Beta 10, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
 
 ```bash
 easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
@@ -125,7 +125,7 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.9
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.10
 easy-ads-validator-mcp
 ```
 
@@ -135,4 +135,4 @@ Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or a
 
 The validator is a public beta. It does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.
 
-For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 9. A `resolved` matrix row means only that committed resolver evidence was found.
+For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 10. A `resolved` matrix row means only that committed resolver evidence was found.

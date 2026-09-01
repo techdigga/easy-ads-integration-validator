@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-beta.10
+
+Tenth public beta for Easy Ads Integration Validator.
+
+- Improved LevelPlay SDK 9+ direct-import recognition for current Unity package layouts, including `Unity.LevelPlay` assembly definitions and mediated-network settings assets.
+- Added LevelPlay SDK version evidence from source constants such as `Constants.cs` when package metadata is unavailable.
+- Reduced false installation failures for current LevelPlay projects while preserving static-only validation and the existing MAX profile.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.9
 
 Ninth public beta for Easy Ads Integration Validator.
