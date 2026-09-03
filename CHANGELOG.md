@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0-beta.11
+
+Eleventh public beta for Easy Ads Integration Validator.
+
+- Added bounded MCP report context metadata with report detail, byte size, approximate token count, visible evidence counts, and omitted evidence counts.
+- Added semantic evidence-role filtering for targeted MCP finding retrieval across `entry`, `hop`, `terminal`, and `context` evidence.
+- Updated agent contracts and MCP usage documentation for compact-first, token-aware Codex, Claude, and compatible workflows.
+
+This beta is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.10
 
 Tenth public beta for Easy Ads Integration Validator.

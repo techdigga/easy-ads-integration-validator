@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/techdigga/easy-ads-integration-validator/main/docs/schemas/audit-report.schema.json",
+  "title": "Easy Ads Integration Validator audit report",
+  "description": "Stable machine-readable output for static Unity mediation audits.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "tool",
+    "version",
+    "profile",
+    "project",
+    "scan",
+    "summary",
+    "findings",
+    "diagnostics",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "tool": { "type": "string" },
+    "version": { "type": "string" },
+    "profile": { "type": "string" },
+    "project": { "$ref": "#/$defs/project" },
+    "scan": { "$ref": "#/$defs/scan" },
+    "summary": { "$ref": "#/$defs/summary" },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/diagnostic" }
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "adNetworkMatrix": {
+      "anyOf": [
+        { "$ref": "#/$defs/adNetworkMatrix" },
+        { "type": "null" }
+      ]
+    },
+    "analyticsInventory": {
+      "anyOf": [
+        { "$ref": "#/$defs/analyticsInventory" },
+        { "type": "null" }
+      ]
+    },
+    "performance": {
+      "anyOf": [
+        { "$ref": "#/$defs/performance" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "project": {
+      "type": "object",
+      "required": ["rootPath", "displayName", "isUnityProject"],
+      "properties": {
+        "rootPath": { "type": "string" },
+        "displayName": { "type": "string" },
+        "isUnityProject": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "scan": {
+      "type": "object",
+      "required": [
+        "startedAt",
+        "toolVersion",
+        "profileId",
+        "includePasses",
+        "failOn",
+        "verbose",
+        "reportDetail",
+        "maxEvidencePerFinding",
+        "summaryOnly"
+      ],
+      "properties": {
+        "startedAt": { "type": "string", "format": "date-time" },
+        "toolVersion": { "type": "string" },
+        "profileId": { "type": "string" },
+        "includePasses": { "type": "boolean" },
+        "failOn": { "type": "string" },
+        "verbose": { "type": "boolean" },
+        "reportDetail": { "enum": ["compact", "standard", "full"] },
+        "maxEvidencePerFinding": { "type": ["integer", "null"], "minimum": 1 },
+        "summaryOnly": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "passCount",
+        "failCount",
+        "warnCount",
+        "unknownCount",
+        "internalWarnCount",
+        "isPartial",
+        "meetsFailureThreshold",
+        "score",
+        "triage"
+      ],
+      "properties": {
+        "passCount": { "type": "integer", "minimum": 0 },
+        "failCount": { "type": "integer", "minimum": 0 },
+        "warnCount": { "type": "integer", "minimum": 0 },
+        "unknownCount": { "type": "integer", "minimum": 0 },
+        "internalWarnCount": { "type": "integer", "minimum": 0 },
+        "isPartial": { "type": "boolean" },
+        "meetsFailureThreshold": { "type": "boolean" },
+        "score": {
+          "anyOf": [
+            { "$ref": "#/$defs/score" },
+            { "type": "null" }
+          ]
+        },
+        "triage": {
+          "anyOf": [
+            { "$ref": "#/$defs/triage" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "required": [
+        "totalDurationMs",
+        "phases",
+        "claimedFileCount",
+        "skippedPathCount",
+        "diagnosticCount",
+        "isPartial"
+      ],
+      "properties": {
+        "totalDurationMs": { "type": "integer", "minimum": 0 },
+        "phases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/phasePerformance" }
+        },
+        "claimedFileCount": { "type": "integer", "minimum": 0 },
+        "skippedPathCount": { "type": "integer", "minimum": 0 },
+        "diagnosticCount": { "type": "integer", "minimum": 0 },
+        "isPartial": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "phasePerformance": {
+      "type": "object",
+      "required": ["name", "durationMs"],
+      "properties": {
+        "name": { "type": "string" },
+        "durationMs": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "score": {
+      "type": "object",
+      "required": ["value", "grade", "categories"],
+      "properties": {
+        "value": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "grade": { "type": "string" },
+        "categories": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/categoryProgress" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "categoryProgress": {
+      "type": "object",
+      "required": ["category", "passCount", "nonPassCount", "totalCount", "completionPercent"],
+      "properties": {
+        "category": { "type": "string" },
+        "passCount": { "type": "integer", "minimum": 0 },
+        "nonPassCount": { "type": "integer", "minimum": 0 },
+        "totalCount": { "type": "integer", "minimum": 0 },
+        "completionPercent": { "type": "integer", "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": true
+    },
+    "triage": {
+      "type": "object",
+      "required": ["criticalIssueCount", "highIssueCount", "manualReviewCount", "unknownCount"],
+      "properties": {
+        "criticalIssueCount": { "type": "integer", "minimum": 0 },
+        "highIssueCount": { "type": "integer", "minimum": 0 },
+        "manualReviewCount": { "type": "integer", "minimum": 0 },
+        "unknownCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "category",
+        "status",
+        "severity",
+        "confidence",
+        "message",
+        "evidence",
+        "remediation",
+        "docsUrl",
+        "ruleVersion",
+        "evidenceSummary"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "enum": ["PASS", "FAIL", "WARN", "UNKNOWN", "INTERNAL_WARN"] },
+        "severity": { "enum": ["info", "low", "medium", "high", "critical"] },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "message": { "type": "string" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "remediation": { "type": ["string", "null"] },
+        "docsUrl": { "type": ["string", "null"], "format": "uri" },
+        "ruleVersion": { "type": "string" },
+        "evidenceSummary": {
+          "anyOf": [
+            { "$ref": "#/$defs/evidenceSummary" },
+            { "type": "null" }
+          ]
+        },
+        "reasoning": { "type": "string" },
+        "unresolved": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["filePath", "line", "column", "snippet", "symbol"],
+      "properties": {
+        "filePath": { "type": "string" },
+        "line": { "type": ["integer", "null"], "minimum": 1 },
+        "column": { "type": ["integer", "null"], "minimum": 1 },
+        "snippet": { "type": ["string", "null"] },
+        "symbol": { "type": ["string", "null"] },
+        "role": { "enum": ["entry", "hop", "terminal", "context"] }
+      },
+      "additionalProperties": true
+    },
+    "evidenceSummary": {
+      "type": "object",
+      "required": ["totalCount", "shownCount", "omittedCount"],
+      "properties": {
+        "totalCount": { "type": "integer", "minimum": 0 },
+        "shownCount": { "type": "integer", "minimum": 0 },
+        "omittedCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "level", "message", "filePath", "operation", "ruleId", "exception", "visibility"],
+      "properties": {
+        "code": { "type": "string" },
+        "level": { "enum": [0, 1, 2] },
+        "message": { "type": "string" },
+        "filePath": { "type": ["string", "null"] },
+        "operation": { "type": ["string", "null"] },
+        "ruleId": { "type": ["string", "null"] },
+        "exception": {
+          "anyOf": [
+            { "$ref": "#/$defs/exception" },
+            { "type": "null" }
+          ]
+        },
+        "visibility": { "enum": [0, 1] }
+      },
+      "additionalProperties": true
+    },
+    "exception": {
+      "type": "object",
+      "required": ["type", "message"],
+      "properties": {
+        "type": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "adNetworkMatrix": {
+      "type": "object",
+      "required": ["mediation", "networks"],
+      "properties": {
+        "mediation": { "type": "string" },
+        "networks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/adNetwork" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "adNetwork": {
+      "type": "object",
+      "required": [
+        "id",
+        "displayName",
+        "installed",
+        "adapterEvidenceFound",
+        "dependencyXmlFound",
+        "androidResolverEvidenceFound",
+        "status",
+        "evidence",
+        "evidenceSummary",
+        "androidVersions",
+        "iosVersions",
+        "hasVersionMismatch",
+        "androidVersionEvidence",
+        "iosVersionEvidence",
+        "androidAdapterVersion",
+        "iosAdapterVersion",
+        "required",
+        "iosDependencyEvidenceFound"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "installed": { "type": "boolean" },
+        "adapterEvidenceFound": { "type": "boolean" },
+        "dependencyXmlFound": { "type": "boolean" },
+        "androidResolverEvidenceFound": { "type": "boolean" },
+        "status": { "type": "string" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "evidenceSummary": {
+          "anyOf": [
+            { "$ref": "#/$defs/evidenceSummary" },
+            { "type": "null" }
+          ]
+        },
+        "androidVersions": { "type": ["array", "null"], "items": { "type": "string" } },
+        "iosVersions": { "type": ["array", "null"], "items": { "type": "string" } },
+        "hasVersionMismatch": { "type": "boolean" },
+        "androidVersionEvidence": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/versionEvidence" }
+        },
+        "iosVersionEvidence": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/versionEvidence" }
+        },
+        "androidAdapterVersion": { "type": ["string", "null"] },
+        "iosAdapterVersion": { "type": ["string", "null"] },
+        "required": { "type": "boolean" },
+        "iosDependencyEvidenceFound": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "versionEvidence": {
+      "type": "object",
+      "required": ["version", "evidence", "evidenceSummary"],
+      "properties": {
+        "version": { "type": "string" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "evidenceSummary": {
+          "anyOf": [
+            { "$ref": "#/$defs/evidenceSummary" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "analyticsInventory": {
+      "type": "object",
+      "required": ["detectedSdks"],
+      "properties": {
+        "detectedSdks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/analyticsDetection" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "analyticsDetection": {
+      "type": "object",
+      "required": ["id", "displayName", "confidence", "version", "platforms", "evidence", "evidenceSummary"],
+      "properties": {
+        "id": { "type": "string" },
+        "displayName": { "type": "string" },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "version": { "type": ["string", "null"] },
+        "platforms": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "evidenceSummary": {
+          "anyOf": [
+            { "$ref": "#/$defs/evidenceSummary" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

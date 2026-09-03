@@ -11,6 +11,7 @@ Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay medi
 | [MAX Unity Profile](max-unity-profile.md) | Understand the validation areas, evidence, statuses, and static-analysis limits. |
 | [LevelPlay Unity Profile](levelplay-unity-profile.md) | Understand `levelplay-unity`, SDK `9.0.0+`, `LP001`-`LP040`, adapter matrix statuses, consent/privacy evidence, callback checks, production safety, and static-only limits. |
 | [Agent Contract](agent-contract.md) | Feed compact or full reports to Codex, Claude, or another coding agent safely. |
+| [JSON Report Schema](schemas/audit-report.schema.json) | Validate stable machine-readable reports in CI and agent workflows. |
 | [Artifact Verification](artifact-verification.md) | Verify release checksums and understand the public beta trust model. |
 
 ## Recommended Workflow
@@ -41,7 +42,7 @@ For LevelPlay, use the compact-first MCP workflow: call `read_report_summary` fi
 
 ## Public Scope
 
-The historical MVP was MAX-only, but the current Beta 10 supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. LevelPlay Beta 10 supports SDK `9.0.0+`; known pre-v9 versions fail validation. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification.
+The historical MVP was MAX-only, but the current Beta 11 supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. LevelPlay Beta 11 supports SDK `9.0.0+`; known pre-v9 versions fail validation. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification.
 
 ## Support
 

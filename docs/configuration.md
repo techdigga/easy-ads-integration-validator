@@ -2,6 +2,34 @@
 
 The public beta supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not implemented. Select `levelplay-unity` with `--profile levelplay-unity` for LevelPlay SDK 9+ scans; the default remains `max-unity`. MAX-specific policy values under `maxUnity` apply only to MAX scans.
 
+## Scan scope
+
+Scans use a bounded default scope. Generated Unity directories (`Library`, `Temp`, `Obj`, `Build`, `Builds`, `Logs`, `UserSettings`, and `.git`) and bulky content directories such as `Art`, `Audio`, `Models`, `Prefabs`, `Textures`, and `Videos` are skipped during recursive source and asset-settings enumeration. Required project settings and mediation SDK evidence paths remain explicitly inspected by their readers.
+
+Use `--exclude-path <path>` to exclude an additional project-relative path. Repeat the option for multiple paths. Use `--include-path <path>` to force a path and its ancestors into recursive enumeration, including a path that matches a default exclusion or a C# SDK-source exclusion. Include paths take precedence over matching excludes and are restricted to the project root.
+
+```bash
+easy-ads-validator scan . --exclude-path Assets/Art --exclude-path Assets/Generated
+easy-ads-validator scan . --include-path Assets/Plugins/AdNetwork --verbose
+```
+
+Scope decisions are deterministic and are surfaced as a bounded verbose diagnostic with the number, reason, and relative-path examples of skipped paths. Scope diagnostics never include source contents or credential values. The options apply to scan commands; the maintainer-only reference package scan has its own fixed package scope.
+
+## Scan resource limits
+
+Normal scans use bounded defaults so an unusually large or problematic project cannot consume unbounded memory or remain apparently stalled. Configure stricter local limits with `--limits <path>` and a JSON file:
+
+```json
+{
+  "maxFileBytes": 4194304,
+  "maxFiles": 100000,
+  "phaseTimeoutSeconds": 300,
+  "totalTimeoutSeconds": 900
+}
+```
+
+`maxFileBytes` is checked before a supported file is read or parsed. `maxFiles` bounds the files claimed by the scan. Phase and total timeouts cancel work defensively. When input is skipped or cancellation interrupts a scan, the report contains `summary.isPartial: true`, a `SCAN_PARTIAL` diagnostic, and an explicit limitation; partial output exits with code `2` and must not be treated as a complete audit. A partial scan does not convert unavailable evidence into a proven `FAIL`.
+
 ## Policy schema
 
 ```json
@@ -61,7 +89,23 @@ Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. T
 
 Markdown reports are optimized for humans: they include a stable `## Readiness` section, short score guidance, the line `Focus first on Critical and High Fail findings. Warn and Unknown items are static-analysis review prompts, not runtime proof.`, and restrained symbols for severity/status cues. Markdown findings are ordered for action: `FAIL` and `INTERNAL_WARN` blockers first, then manual-review warnings, other warnings, unknown/static-limit items, and passes; each group is ordered by severity and then rule ID. JSON reports use deterministic status, severity, and rule-ID ordering for agents and CI, keep stable enum/string values, and do not include Markdown-only labels, symbols, emoji, or guidance copy.
 
+Readiness scoring starts at 100 and is reduced by proven failures: critical, high, and medium failures cost 20, 12, and 8 points. High warnings cost 2 points; lower-severity warnings do not reduce the score. Critical-severity warnings are normalized to high severity because warnings are advisory and are never counted as critical issues. Unknown critical/high findings cost 2 points as static-analysis limits. The score is clamped to 0 and is separate from the `--fail-on` exit-code threshold.
+
 Use `--report-detail full --include-passes` when archiving a complete evidence report.
+
+## Report secret redaction
+
+Report writers apply deterministic, output-only redaction before serialization. The redactor masks common SDK/app-key assignments and initialization arguments, known AdMob identifiers, credential-bearing URL userinfo, and raw evidence snippets whose symbols are clearly sensitive. It preserves file paths, line numbers, rule IDs, SDK versions, and surrounding method or field names so findings remain actionable.
+
+Redaction is heuristic and intentionally bounded. It is not a complete secret scanner and does not prove that a project contains no credentials. Agents should treat `[REDACTED]` as an opaque value and never attempt to reconstruct it. Keep source projects and full raw evidence private when sharing reports.
+
+## JSON report contract
+
+The stable machine-readable contract is published as [`audit-report.schema.json`](schemas/audit-report.schema.json). It describes the report identity, scan options, summary and partial-scan flags, performance metadata, finding statuses and severities, evidence, diagnostics, remediation, mediated-network matrix, and analytics inventory. Markdown output may evolve independently.
+
+The optional `performance` object reports `totalDurationMs`, ordered phase durations, `claimedFileCount`, `skippedPathCount`, `diagnosticCount`, and `isPartial`. The duration ends at report preparation; writing the final report files is not included. These values help identify slow or incomplete scans without exposing source contents or credentials.
+
+The current schema version is `1.0`. Consumers should accept the same major version, ignore unknown additive fields, and fail closed or request migration guidance for an unknown major version. Breaking field or meaning changes increment the major version; additive compatible fields may increment the minor version. The `schemaVersion` field is independent from the CLI package version and mediation SDK versions.
 
 Agent triage command:
 

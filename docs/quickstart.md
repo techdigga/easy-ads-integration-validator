@@ -7,7 +7,7 @@ This walkthrough takes a Unity developer from installation to a first AppLovin M
 Install .NET 8, .NET 9, or .NET 10, then install the public beta:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.10
+dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.11
 ```
 
 Verify the command:
@@ -53,7 +53,7 @@ easy-ads-validator scan /path/to/unity-project --platform unity --mediation max 
 
 The command reads committed project files only. It does not open Unity or change the project.
 
-For Unity LevelPlay Beta 10, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
+For Unity LevelPlay Beta 11, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
 
 ```bash
 easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
@@ -82,10 +82,30 @@ Write both formats to a directory:
 easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report
 ```
 
+Write a SARIF report for GitHub Code Scanning or another compatible CI tool:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --format sarif --out audit-report
+```
+
 Use full evidence while investigating a specific rule:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --format markdown,json --out audit-report --include-passes --report-detail full
+```
+
+For unusually large projects, optionally set local scan limits. Files over the byte limit are skipped before parsing, and timeouts produce a clearly marked partial report:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --limits scan-limits.json --format json --summary-only
+```
+
+See [Configuration](configuration.md#scan-resource-limits) for the JSON fields. A partial scan has `summary.isPartial: true`, emits exit code `2`, and must be reviewed or rerun before using its findings as a complete audit.
+
+The CLI keeps parsed C# evidence in a bounded process-local cache when the same project and scan inputs are reused by a long-lived host. Cached data is held in memory only. Pass `--no-cache` when a fresh C# index is required:
+
+```bash
+easy-ads-validator scan /path/to/unity-project --no-cache --format json --summary-only
 ```
 
 Interactive Markdown output can show progress and ask whether to display the report or write it to a file. Explicit output paths and JSON output remain non-interactive.
@@ -125,7 +145,7 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.10
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.11
 easy-ads-validator-mcp
 ```
 
@@ -135,4 +155,4 @@ Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or a
 
 The validator is a public beta. It does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.
 
-For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 10. A `resolved` matrix row means only that committed resolver evidence was found.
+For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 11. A `resolved` matrix row means only that committed resolver evidence was found.
