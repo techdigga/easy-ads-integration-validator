@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible problem with the validator.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Remove credentials, app identifiers, customer data, and proprietary source before submitting.
+  - type: input
+    id: version
+    attributes:
+      label: Validator version
+      description: Include the package or archive version.
+      placeholder: 0.1.x-beta
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include operating system and .NET target framework.
+      placeholder: macOS 15, .NET 9
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Paste the redacted command and relevant options.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Include the smallest report or project evidence that reproduces the problem.

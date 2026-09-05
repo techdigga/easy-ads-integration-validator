@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-Easy Ads Integration Validator is currently in public beta. Security fixes are published for the latest beta version only.
+Easy Ads Integration Validator supports security fixes for the current stable release.
 
 | Version | Supported |
 | --- | --- |
-| `0.1.x-beta` | Yes |
+| `1.0.x` | Yes |
 | Older versions | No |
 
 ## Reporting A Vulnerability
@@ -29,7 +29,7 @@ Include:
 - Reproduction steps or a minimal sample when possible.
 - Whether any private Unity project data, credentials, ad unit IDs, SDK keys, or analytics identifiers may have been exposed.
 
-We will acknowledge valid reports as soon as practical and publish remediation guidance with the next fixed beta artifact.
+We will acknowledge valid reports as soon as practical and publish remediation guidance with the next fixed stable artifact.
 
 ## Scope
 

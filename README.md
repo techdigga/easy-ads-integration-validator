@@ -2,7 +2,9 @@
 
 ### Find Unity mediation integration gaps before they become build failures, lost revenue, or release surprises.
 
-Easy Ads Integration Validator is a developer-first static audit tool for Unity game teams using AppLovin MAX or Unity LevelPlay. It inspects the project files already in source control, explains what it found, and produces focused Markdown or JSON reports that developers, CI jobs, Codex, and Claude can use immediately.
+Easy Ads Integration Validator is a developer-first static audit tool for Unity game teams using AppLovin MAX or Unity LevelPlay. It reads supported files present under the supplied project root, including untracked and uncommitted files, explains what it found, and produces focused Markdown or JSON reports that developers, CI jobs, Codex, and Claude can use immediately.
+
+Keywords: Unity, AppLovin MAX, LevelPlay, ad mediation, static analysis, .NET CLI, MCP, Codex, Claude, and game development.
 
 **One scan. Clear evidence. Faster fixes.**
 
@@ -16,7 +18,19 @@ Easy Ads Integration Validator is a developer-first static audit tool for Unity 
 
 ## What It Validates
 
-The public beta supports AppLovin MAX mediation and Unity LevelPlay mediation in Unity. MAX remains the default profile. LevelPlay Beta 11 supports the Unity LevelPlay SDK at `9.0.0+` and covers the same static integration areas with LevelPlay-specific APIs, settings, callbacks, loading, revenue, and adapter evidence.
+The current public package is `1.0.0`. It supports AppLovin MAX mediation and Unity LevelPlay mediation in Unity. MAX remains the default profile. The LevelPlay profile supports Unity LevelPlay SDK `9.0.0+` and covers the corresponding static integration areas with LevelPlay-specific APIs, settings, callbacks, loading, revenue, and adapter evidence.
+
+## Supported versions
+
+| Component | Supported public package baseline |
+| --- | --- |
+| .NET runtime | `8`, `9`, or `10` |
+| Unity editor evidence | Unity `2022.3.62f2` or newer by default; local policy can raise the floor |
+| AppLovin MAX Unity plugin | `8.6.0` or newer by default |
+| External Dependency Manager for Unity | `1.2.185` or newer by default when MAX evidence is present |
+| Unity LevelPlay SDK | `9.0.0` or newer with `levelplay-unity` |
+
+These are validator policy floors, not a guarantee that a mediation SDK supports every Unity or platform combination. Confirm platform compatibility in the official [MAX Unity integration guide](https://developers.applovin.com/en/max/unity/overview/integration/) or [LevelPlay Unity documentation](https://docs.unity.com/grow/levelplay/sdk/unity).
 
 The coverage table uses both mediation profiles: MAX terminology identifies the default profile, while LevelPlay applies the corresponding SDK 9+ APIs, settings, adapters, app keys, callbacks, and policy-owned evidence.
 
@@ -25,14 +39,14 @@ The coverage table uses both mediation profiles: MAX terminology identifies the 
 | **SDK foundation** | MAX or LevelPlay SDK import through `Assets` or UPM, duplicate installation risk, supported SDK version, assembly definitions, settings, app-key evidence, and required project structure. |
 | **Dependency and adapter setup** | External Dependency Manager/EDM4U presence and version, resolver settings, MAX or LevelPlay adapter/network detection, dependency XML evidence, Android library resolution, and a mediation network matrix. |
 | **Consent and privacy** | MAX privacy-flow or LevelPlay privacy settings, consent/privacy evidence, privacy URL requirements, ATT-related code paths, and conflicting direct consent/ATT ownership. |
-| **Unity and platform readiness** | Unity version policy, Android API levels, Gradle and resolver settings, Android manifest signals, iOS deployment target evidence, and platform-specific configuration available in committed files. |
+| **Unity and platform readiness** | Unity version policy, Android API levels, Gradle and resolver settings, Android manifest signals, iOS deployment target evidence, and platform-specific configuration available under the supplied project root, including untracked and uncommitted files. |
 | **Keys, app IDs, and ad units** | MAX SDK keys or LevelPlay app keys, Google/AdMob app IDs when relevant, ad unit presence by format and platform, duplicate IDs, placement tracking, and default local IDs when remote configuration is used. |
 | **Initialization and lifecycle** | MAX or LevelPlay initialization call sites, singular initialization, staged guards, callback subscription timing, initialization failure/completion state handling, and load sequencing after initialization. |
 | **Loading, showing, and retry** | Interstitial and rewarded readiness checks, load/show callback wiring, reload after close or display failure, banner refresh and destruction behavior, retry coverage, and fixed or exponential backoff patterns. |
 | **Events and revenue** | Display, click, impression, paid-revenue, and ad-format callbacks for both profiles; event forwarding to detected Firebase, AppsFlyer, and Adjust integrations; expected revenue event names and payload fields; and background-callback UI risks. |
 | **Production safety** | MAX Creative Debugger or LevelPlay diagnostic settings, debug logging, production flags, unsafe UI work in background callbacks, and other release-safety signals. |
 
-### Unity LevelPlay Beta 11
+### Unity LevelPlay profile
 
 Select the `levelplay-unity` profile explicitly:
 
@@ -41,7 +55,7 @@ easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelpl
 easy-ads-validator scan ./MyUnityProject --profile levelplay-unity --format json --summary-only
 ```
 
-The profile recognizes direct imports under `Assets/LevelPlay` and legacy-compatible `Assets/IronSource`, plus UPM package IDs `com.unity.services.levelplay` and legacy `com.ironsource.mediation`. It rejects known SDK versions before `9.0.0` and reports `LP001`-`LP040` for installation, version, duplicate installation, settings, assembly definitions, platform configuration, app keys, local fallback ad units, placement arguments, adapter dependency evidence, initialization, callback wiring, load ordering, thread/UI safety, consent, privacy URL, ATT ownership, audience-signal evidence, duplicate or unsupported callback subscriptions, revenue/analytics forwarding, and production safety. See the [LevelPlay package integration guide](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration).
+The profile recognizes direct imports under `Assets/LevelPlay` and legacy-compatible `Assets/IronSource`, plus UPM package IDs `com.unity.services.levelplay` and legacy `com.ironsource.mediation`. It rejects known SDK versions before `9.0.0` and reports `LP001`-`LP040` for installation, version, duplicate installation, settings, assembly definitions, platform configuration, app keys, local fallback ad units, placement arguments, adapter dependency evidence, initialization, callback wiring, load ordering, thread/UI safety, consent, privacy URL, ATT ownership, audience-signal evidence, duplicate or unsupported callback subscriptions, revenue/analytics forwarding, and production safety. See Unity's [LevelPlay package integration guide](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration) and [LevelPlay initialization guide](https://docs.unity.com/grow/levelplay/sdk/unity/migrate-to-init-api).
 
 | Rule | Severity | Confidence and status semantics | Remediation |
 | --- | --- | --- | --- |
@@ -50,11 +64,11 @@ The profile recognizes direct imports under `Assets/LevelPlay` and legacy-compat
 | `LP003` | High | High-confidence `FAIL` when direct and UPM installations are both present. | Keep one installation source. |
 | `LP004` | High | High-confidence `FAIL` when settings evidence is missing or malformed. | Restore valid LevelPlay settings evidence. |
 | `LP005` | High | High-confidence `FAIL` when required assembly-definition evidence is missing or malformed. | Restore the required LevelPlay assembly definition. |
-| `LP006` | Medium | High-confidence `WARN` for unresolved or conflicting committed adapter/dependency evidence; low-confidence `UNKNOWN` when matrix evidence is unavailable. | Review static adapter metadata and resolver evidence. |
+| `LP006` | Medium | High-confidence `WARN` for unresolved or conflicting adapter/dependency evidence under the supplied root; low-confidence `UNKNOWN` when matrix evidence is unavailable. | Review static adapter metadata and resolver evidence. |
 
 `FAIL`, `WARN`, and `UNKNOWN` are static report semantics. They do not prove callback execution, runtime behavior, dashboard state, generated builds, native output, or dependency resolution on a device.
 
-LevelPlay matrix statuses are `missing`, `resolved`, `needs-resolution-evidence`, `conflict`, and `platform-gap`. A `resolved` row means matching resolver evidence is committed; it does not mean that Unity, Gradle, CocoaPods, or a device resolved the dependency.
+LevelPlay matrix statuses are `missing`, `resolved`, `needs-resolution-evidence`, `conflict`, and `platform-gap`. A `resolved` row means matching resolver evidence is present under the supplied root; it does not mean that Unity, Gradle, CocoaPods, or a device resolved the dependency.
 
 Static analysis reports evidence and uncertainty. It does not pretend that a source-code pattern proves runtime behavior.
 
@@ -81,10 +95,10 @@ The validator does not silently edit Unity projects. Automatic approved-fix work
 
 ## Install
 
-The CLI is distributed as a .NET global tool. Install .NET 8, .NET 9, or .NET 10 first, then install the current public beta:
+The CLI is distributed as a .NET global tool. Install .NET 8, .NET 9, or .NET 10 first, then install the current stable release:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.11
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
 ```
 
 The installed command is `easy-ads-validator`:
@@ -96,7 +110,7 @@ easy-ads-validator --version
 Update an existing installation:
 
 ```bash
-dotnet tool update --global EasyAdsIntegrationValidator --version 0.1.0-beta.11
+dotnet tool update --global EasyAdsIntegrationValidator --version 1.0.0
 ```
 
 Remove the CLI:
@@ -121,7 +135,7 @@ Windows PowerShell example:
 easy-ads-validator scan "C:\Projects\My Unity Game"
 ```
 
-The public beta defaults to the Unity AppLovin MAX profile. The equivalent explicit command is:
+The default profile is Unity AppLovin MAX. The equivalent explicit command is:
 
 ```bash
 easy-ads-validator scan /path/to/unity-project --platform unity --mediation max --profile max-unity
@@ -163,6 +177,8 @@ easy-ads-validator scan /path/to/unity-project --format markdown,json --out audi
 
 Interactive terminal Markdown scans show progress and may ask whether to display the report or write it to a file. JSON stdout, redirected output, and explicit `--out` runs do not prompt, so they are safe for automation.
 
+When a scan is partial because a limit, timeout, or cancellation interrupted it, the report sets `summary.isPartial` and the process exits with code `2`. Treat that result as incomplete and rerun it before using the findings as a release gate.
+
 ## CI And MCP
 
 Fail CI when high-severity failed findings are present:
@@ -177,13 +193,13 @@ The command returns:
 | --- | --- |
 | `0` | The scan completed without a failed finding at the configured threshold. |
 | `1` | The scan completed and at least one failed finding met the threshold. |
-| `2` | Arguments, project path, policy, profile, format, or output configuration is invalid. |
+| `2` | Input/configuration is invalid, or the scan is incomplete/partial because of a limit, timeout, or cancellation. Check JSON `summary.isPartial` and the `SCAN_PARTIAL` diagnostic when present. |
 | `3` | An unexpected internal error occurred. |
 
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.11
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
 easy-ads-validator-mcp
 ```
 
@@ -232,9 +248,17 @@ This is static repository inspection, not a build or runtime certification. It d
 - [Quickstart](docs/quickstart.md): install-to-first-scan walkthrough.
 - [Configuration](docs/configuration.md): local JSON policy options.
 - [MAX Unity profile](docs/max-unity-profile.md): supported MAX validation scope.
-- [LevelPlay Unity profile](docs/levelplay-unity-profile.md): Beta 11 support for SDK `9.0.0+`, `LP001`-`LP040`, and static installation, platform, credential, dependency, initialization, callback, loading, revenue, consent, privacy, production-safety, and audience evidence.
+- [LevelPlay Unity profile](docs/levelplay-unity-profile.md): SDK `9.0.0+`, `LP001`-`LP040`, and static installation, platform, credential, dependency, initialization, callback, loading, revenue, consent, privacy, production-safety, and audience evidence.
 - [Agent contract](docs/agent-contract.md): MCP tool behavior and response boundaries.
-- [Artifact verification](docs/artifact-verification.md): checksums and beta trust model.
+- [Artifact verification](docs/artifact-verification.md): checksums, download provenance, and current release trust limitations.
+
+## Troubleshooting
+
+- **`easy-ads-validator` is not found:** add `$HOME/.dotnet/tools` on macOS/Linux or `%USERPROFILE%\\.dotnet\\tools` on Windows to `PATH`, then open a new shell.
+- **The command reports an unsupported profile:** use `max/max-unity` or `levelplay/levelplay-unity`; LevelPlay requires both values together.
+- **A report is empty or unexpectedly `UNKNOWN`:** confirm the path is the Unity project root, the relevant SDK/settings files are present below it, and no scan limit skipped them. Use `--verbose` for bounded scope and diagnostic counts.
+- **JSON is not safe to publish:** output redaction is heuristic. Review reports before sharing and never include the original project, raw source, SDK keys, credentials, or personal data in an issue.
+- **A dependency or ad-serving issue remains after a pass:** run the Unity editor, platform build, mediation integration test, and dashboard checks separately. This CLI cannot perform those checks.
 
 ## Support And Security
 

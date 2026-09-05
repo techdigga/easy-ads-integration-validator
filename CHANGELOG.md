@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0
+
+Stable public release of Easy Ads Integration Validator.
+
+- Validated CLI and MCP .NET tools for .NET 8, .NET 9, and .NET 10.
+- Added self-contained macOS ARM64, macOS x64, and Windows x64 archives with SHA-256 checksums.
+- Documented manual GitHub Releases, NuGet Trusted Publishing, and bounded artifact verification.
+
+This release is static analysis only. It does not verify dashboard setup, runtime ad serving, device logs, build output, or legal compliance.
+
 ## 0.1.0-beta.11
 
 Eleventh public beta for Easy Ads Integration Validator.

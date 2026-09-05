@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use Easy Ads Integration Validator, please cite this software."
+title: "Easy Ads Integration Validator"
+version: 1.0.0
+type: software
+authors:
+  - name: techdigga
+repository-code: "https://github.com/techdigga/easy-ads-integration-validator"
+url: "https://github.com/techdigga/easy-ads-integration-validator"
+license: Apache-2.0
+keywords:
+  - MAX
+  - LevelPlay
+  - Unity
+  - .NET
+  - MCP
+  - Codex
+  - Claude
+  - static-analysis
+  - ad-mediation
+  - game-development

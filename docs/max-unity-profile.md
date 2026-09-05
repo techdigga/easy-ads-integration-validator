@@ -2,35 +2,37 @@
 
 The `max-unity` profile implements static MAX mediation checks. Default severities below are the rule defaults before policy overrides.
 
+Use AppLovin's official [MAX Unity integration guide](https://developers.applovin.com/en/max/unity/overview/integration/) for SDK installation and runtime integration. The default policy expects Unity `2022.3.62f2+`, MAX Unity plugin `8.6.0+`, and External Dependency Manager for Unity `1.2.185+`; local policy may raise thresholds, but the validator does not claim that every newer SDK/editor combination is compatible.
+
 LevelPlay is a separate profile. See the [LevelPlay Unity profile](levelplay-unity-profile.md) for SDK `9.0.0+`, `LP001`-`LP040`, and LevelPlay adapter-matrix behavior.
 
-Static-analysis limits apply to all rules: the scanner reads committed repository files only, parses C# syntax without semantic compilation, and does not run Unity, mobile builds, SDKs, ad platforms, or device flows.
+Static-analysis limits apply to all rules: the scanner reads supported files present under the supplied Unity project root, including untracked or uncommitted files, and parses C# syntax without semantic compilation. It does not run Unity, mobile builds, SDKs, ad platforms, or device flows. Scan an intended copy of the project and review redaction before sharing reports.
 
 Indirect evidence is bounded and syntax-derived. The profile follows recognized helper methods, event/delegate invocation paths, `nameof(...)` scheduled method arguments, and API-aware readiness wrappers only when indexed facts establish the relationship. Build/post-process assignments count as app-ID presence even when their value is dynamic, but runtime values, reflection, remote configuration, and generated platform output remain outside static validation.
 
-Many MAX rules use the shared MAX SDK API reference. The reference is extracted from committed `Assets/MaxSdk/Scripts` files when available, falls back to an embedded MAX Unity reference, and can be extended with local `maxUnity.apiAliases` policy entries for project wrappers.
+Many MAX rules use the shared MAX SDK API reference. The reference is extracted from `Assets/MaxSdk/Scripts` files present under the supplied root when available, falls back to an embedded MAX Unity reference, and can be extended with local `maxUnity.apiAliases` policy entries for project wrappers.
 
 ## SDK Import And Version
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
-| `MAX001` | Detects one MAX install mode: direct Unity package import under known asset roots, or UPM package `com.applovin.mediation.ads`. | Critical | Cannot see uncommitted imports or generated-only artifacts. Direct plus UPM evidence is a duplicate install failure. | Keep exactly one MAX install mode and commit package or asset evidence. |
+| `MAX001` | Detects one MAX install mode: direct Unity package import under known asset roots, or UPM package `com.applovin.mediation.ads`. | Critical | Cannot see files outside the supplied root or generated-only artifacts. Direct plus UPM evidence is a duplicate install failure. | Keep exactly one MAX install mode and retain package or asset evidence under the supplied root. |
 | `MAX002` | Compares discovered MAX Unity plugin version with `minimumMaxPluginVersion` (`8.6.0` by default). | High | Returns `UNKNOWN` when version text is absent or unparsable. | Upgrade the MAX Unity plugin to the configured minimum or newer. |
 | `MAX003` | Requires External Dependency Manager evidence and version `minimumExternalDependencyManagerVersion` (`1.2.185` by default) when MAX is imported. | Medium | Returns `UNKNOWN` when EDM exists but its version is absent or unparsable. | Install or upgrade External Dependency Manager for Unity and commit resolver evidence. |
-| `MAX004` | Checks Android resolver settings from `ProjectSettings/GvhProjectSettings.xml` and resolved AppLovin output in `AndroidResolverDependencies.xml`. | Medium | Requires committed resolver settings/output; generated-only or manually resolved libraries that are not committed cannot be proven. | Keep Android resolver settings aligned with policy and commit AppLovin resolver output evidence. |
+| `MAX004` | Checks Android resolver settings from `ProjectSettings/GvhProjectSettings.xml` and resolved AppLovin output in `AndroidResolverDependencies.xml`. | Medium | Requires resolver settings/output under the supplied root; generated-only or manually resolved libraries that are absent cannot be proven. | Keep Android resolver settings aligned with policy and retain AppLovin resolver output under the supplied root when available. |
 | `MAX005` | Reads Unity version and compares it with `minimumUnityVersion` (`2022.3.62f2` by default). | Medium | Cannot infer version when `ProjectVersion.txt` is missing or malformed. | Upgrade to the configured minimum or newer; Unity 6 is recommended for current ad network and Google Play policy support. |
-| `MAX006` | Requires MAX SDK assembly definition files for direct imports and checks committed UPM package contents when available. | High | Manifest-only UPM installs may be `UNKNOWN` because package contents are not committed. | Commit/import the complete MAX package with expected asmdefs. |
-| `MAX007` | Requires committed MAX `AppLovinSettings.asset` evidence. | High | Generated settings files do not satisfy the rule because existing projects should include the settings asset. | Open MAX settings or Integration Manager in Unity, configure the project, and commit `AppLovinSettings.asset`. |
+| `MAX006` | Requires MAX SDK assembly definition files for direct imports and checks UPM package contents when available. | High | Manifest-only UPM installs may be `UNKNOWN` when package contents are absent from the supplied root. | Import the complete MAX package with expected asmdefs under the supplied root. |
+| `MAX007` | Requires MAX `AppLovinSettings.asset` evidence. | High | Generated settings files do not satisfy the rule because existing projects should include the settings asset. | Open MAX settings or Integration Manager in Unity, configure the project, and retain `AppLovinSettings.asset` under the supplied root. |
 
 ## Platform Settings
 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
-| `MAX010` | Checks Android min API and target API only; default target is API `36`. | High | Requires committed Unity Android settings or Gradle template API values. Jetifier belongs to `MAX004`. | Set Android min API to `24+` and target API to `36+`. |
-| `MAX011` | Checks Unity custom Gradle template toggles against committed Gradle template files. | Medium | Does not execute Gradle or resolve dependency graphs; optional templates are only checked when their toggles are enabled. | Align custom Gradle template toggles with files under `Assets/Plugins/Android`. |
+| `MAX010` | Checks Android min API and target API only; default target is API `36`. | High | Requires Unity Android settings or Gradle template API values under the supplied root. Jetifier belongs to `MAX004`. | Set Android min API to `24+` and target API to `36+`. |
+| `MAX011` | Checks Unity custom Gradle template toggles against Gradle template files under the supplied root. | Medium | Does not execute Gradle or resolve dependency graphs; optional templates are only checked when their toggles are enabled. | Align custom Gradle template toggles with files under `Assets/Plugins/Android`. |
 | `MAX012` | Checks iOS deployment target against hard minimum `13.0` and recommended target `15.0`. | Medium | Missing, conflicting, or unparsable iOS target evidence is `UNKNOWN`. | Use iOS deployment target `15.0+` when possible; below `13.0` fails. |
 | `MAX013` | Checks ATT usage description source evidence, including MAX consent-flow privacy URL and base usage description. | High | Does not inspect generated Info.plist/Xcode output and does not prove runtime ATT behavior. | Configure MAX Terms and Privacy Policy Flow with a production HTTPS privacy URL and base tracking usage description, or provide project-owned source plist/postprocess evidence. |
-| `MAX014` | Skips strict SKAdNetwork validation pending the dedicated SKAN source model. | High | Missing SKAN evidence does not warn or fail in this pass. | No immediate action; revisit after the SKAN deep-dive rule is implemented. |
+| `MAX014` | Does not assess SKAdNetwork identifiers in this profile. | High | SKAdNetwork identifier presence and correctness are outside this static profile; missing evidence does not produce a pass or fail claim. | Validate SKAdNetwork configuration through the normal Unity, platform, and mediation release workflow. |
 | `MAX015` | Checks project-authored Android manifest ownership and ad permission evidence, with additional recognition of deterministic `AD_ID` additions from Android build/post-process source. | High | Does not inspect the final merged manifest; dynamic or ambiguous build-time permission mutations remain advisory. | If using a custom manifest, commit it with `INTERNET`, `ACCESS_NETWORK_STATE`, and `AD_ID` where required, or verify a deterministic Android build-time source adds `AD_ID`. |
 | `MAX021` | Checks Google/AdMob app IDs from AppLovin settings or recognizable source-controlled Android/iOS build and post-process assignments when Google demand is required. | High | Does not query AdMob or inspect generated platform output; a recognizable dynamic assignment proves source presence, not its runtime value. | Configure valid Android and iOS Google app IDs in AppLovin settings or a deterministic build-time source, and avoid placeholder test IDs. |
 
@@ -39,7 +41,7 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
 | `MAX020` | Requires valid SDK key evidence in `AppLovinSettings.asset`; deprecated `MaxSdk.SetSdkKey(...)` usage warns when settings are valid. | Critical | Does not validate the key against AppLovin and does not allow runtime calls to replace the settings asset. | Configure the SDK key in `AppLovinSettings.asset`, remove placeholder/conflicting values, and remove `SetSdkKey` calls. |
-| `MAX022` | Checks each detected MAX ad format for non-placeholder local fallback ad unit IDs from code, project settings, and bounded serialized asset/config evidence, and blocks obvious duplicate reuse. | High | Cannot validate dashboard state or remote-only values; unresolved remote paths are reported for manual review. | Define real ad unit IDs by format/platform in committed config or code, keep local fallbacks when remote configuration is used, and avoid Google sample IDs or shared IDs across incompatible slots. |
+| `MAX022` | Checks each detected MAX ad format for non-placeholder local fallback ad unit IDs from code, project settings, and bounded serialized asset/config evidence, and blocks obvious duplicate reuse. | High | Cannot validate dashboard state or remote-only values; unresolved remote paths are reported for manual review. | Define real ad unit IDs by format/platform in config or code under the supplied root, keep local fallbacks when remote configuration is used, and avoid Google sample IDs or shared IDs across incompatible slots. |
 | `MAX023` | Checks placement names on direct MAX show calls and banner/MREC placement setters. | Low | Missing or dynamic placement evidence warns; random unrelated placement strings no longer satisfy the rule. | Pass short placement/source names to show calls or placement setters; direct placement values over 24 characters fail. |
 
 ## Initialization
@@ -65,12 +67,12 @@ Many MAX rules use the shared MAX SDK API reference. The reference is extracted 
 
 ## Mediated Networks And Native Dependencies
 
-MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, committed Android resolver evidence, and static Android/iOS adapter version strings are present for each network. Markdown reports show concise `Android`, `iOS`, and `Resolution` columns; JSON matrix rows preserve the detailed evidence fields and also expose nullable `androidAdapterVersion` and `iosAdapterVersion` fields for agent consumers.
+MAX reports include an `Ad Network Matrix` before individual findings when the `max-unity` profile is used. The matrix is a compact static view of policy-required and detected mediated networks. It checks whether adapter evidence, dependency XML, Android resolver evidence, and static Android/iOS adapter version strings are present under the supplied root for each network. Markdown reports show concise `Android`, `iOS`, and `Resolution` columns; JSON matrix rows preserve the detailed evidence fields and also expose nullable `androidAdapterVersion` and `iosAdapterVersion` fields for agent consumers.
 
 Matrix statuses:
 
-- `resolved`: AppLovin adapter evidence appears in committed resolver output.
-- `needs-resolution-evidence`: adapter or dependency XML evidence exists, but committed Android resolver output was not found.
+- `resolved`: AppLovin adapter evidence appears in resolver output under the supplied root.
+- `needs-resolution-evidence`: adapter or dependency XML evidence exists, but Android resolver output was not found under the supplied root.
 - `version-mismatch`: multiple Android or iOS adapter versions were found for the same network.
 - `missing`: no AppLovin adapter evidence was found for the network.
 - `needs-review`: static evidence was ambiguous.
@@ -80,7 +82,7 @@ The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, o
 | Rule | Check | Default severity | Static-analysis limits | Remediation pattern |
 | --- | --- | --- | --- | --- |
 | `MAX050` | Compares `requiredNetworks` with detected adapter/dependency evidence, including common MAX adapter aliases such as `google-adapter`, `facebook-adapter`, and `bytedance-adapter`; absent policy-listed networks warn for review. | High | Incomplete dependency evidence returns `UNKNOWN`; no dashboard/API confirmation. | Add the desired adapter/dependency evidence or adjust the policy network list. |
-| `MAX051` | Checks native dependency evidence for required networks. | High | Missing committed dependency files may produce `UNKNOWN` or `WARN`. | Commit resolver XML, Gradle, pods, postprocess, or plugin evidence for required networks. |
+| `MAX051` | Checks native dependency evidence for required networks. | High | Missing dependency files under the supplied root may produce `UNKNOWN` or `WARN`. | Retain resolver XML, Gradle, pods, postprocess, or plugin evidence under the supplied root when available. |
 | `MAX052` | Neutral compatibility rule; direct mediated SDK initialization is not checked in the current MAX Unity profile. | Low | No mediated SDK initialization claim is made because direct setup can be legitimate for another integration. | Review adapter documentation separately when an adapter requires additional setup. |
 
 ## Callback Wiring
@@ -90,7 +92,7 @@ The matrix does not run External Dependency Manager, Gradle, CocoaPods, Unity, o
 | `MAX060` | Requires loaded, load-failed, display-failed, and hidden interstitial callbacks; display-failed recovery is reviewed through bounded helper, scheduled, and event-subscriber paths, while display/click tracking is low priority. | Medium | Static traversal follows indexed method and custom-event relationships up to a bounded depth; reflection, dynamic delegates, and runtime dispatch remain unproven. | Wire the four core callbacks and check readiness before reloading or scheduling an interstitial after display failure. |
 | `MAX061` | Requires loaded, load-failed, display-failed, and hidden rewarded callbacks; reward-grant, display, and click callbacks are not required. Display-failed recovery is reviewed through bounded helper, scheduled, and event-subscriber paths. | High | Static traversal follows indexed method and custom-event relationships up to a bounded depth; reflection, dynamic delegates, and runtime dispatch remain unproven. | Wire the four core callbacks and check readiness before reloading or scheduling a rewarded ad after display failure. |
 | `MAX062` | Checks banner/MREC callbacks when banner or MREC use exists; missing click-only evidence is low severity. | Medium | Returns `UNKNOWN` when banner/MREC use is absent. | Wire relevant banner and MREC load/fail callbacks; add click callbacks when useful for analytics or debugging. |
-| `MAX063` | Neutral compatibility rule; app-open callback validation is not checked by default. | Medium | App-open validation is intentionally deferred. | No action required by this rule. |
+| `MAX063` | Neutral compatibility rule; app-open callback validation is not checked by default. | Medium | App-open validation is outside the current profile. | No action required by this rule. |
 | `MAX064` | Detects duplicate MAX callback subscriptions and repeatable lifecycle registrations without a visible guard or matching unsubscribe. | Medium | Lifecycle semantics are approximated from syntax. | Register callbacks once centrally, guard registration, or unsubscribe from `OnDisable`/teardown. |
 
 ## Loading, Showing, And Retry

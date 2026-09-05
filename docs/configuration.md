@@ -1,10 +1,10 @@
 # Configuration
 
-The public beta supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not implemented. Select `levelplay-unity` with `--profile levelplay-unity` for LevelPlay SDK 9+ scans; the default remains `max-unity`. MAX-specific policy values under `maxUnity` apply only to MAX scans.
+The current public package supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not available. Select `levelplay-unity` with `--mediation levelplay --profile levelplay-unity` for LevelPlay SDK `9.0.0+` scans; the default remains `max-unity`. MAX-specific policy values under `maxUnity` apply only to MAX scans.
 
 ## Scan scope
 
-Scans use a bounded default scope. Generated Unity directories (`Library`, `Temp`, `Obj`, `Build`, `Builds`, `Logs`, `UserSettings`, and `.git`) and bulky content directories such as `Art`, `Audio`, `Models`, `Prefabs`, `Textures`, and `Videos` are skipped during recursive source and asset-settings enumeration. Required project settings and mediation SDK evidence paths remain explicitly inspected by their readers.
+Scans use a bounded default scope. Supported files present under the supplied Unity project root are eligible, including untracked or uncommitted files. Generated Unity directories (`Library`, `Temp`, `Obj`, `Build`, `Builds`, `Logs`, `UserSettings`, and `.git`) and bulky content directories such as `Art`, `Audio`, `Models`, `Prefabs`, `Textures`, and `Videos` are skipped during recursive source and asset-settings enumeration. Required project settings and mediation SDK evidence paths remain explicitly inspected by their readers. Scan an intended copy of the project and review redaction before sharing reports.
 
 Use `--exclude-path <path>` to exclude an additional project-relative path. Repeat the option for multiple paths. Use `--include-path <path>` to force a path and its ancestors into recursive enumeration, including a path that matches a default exclusion or a C# SDK-source exclusion. Include paths take precedence over matching excludes and are restricted to the project root.
 
@@ -13,7 +13,7 @@ easy-ads-validator scan . --exclude-path Assets/Art --exclude-path Assets/Genera
 easy-ads-validator scan . --include-path Assets/Plugins/AdNetwork --verbose
 ```
 
-Scope decisions are deterministic and are surfaced as a bounded verbose diagnostic with the number, reason, and relative-path examples of skipped paths. Scope diagnostics never include source contents or credential values. The options apply to scan commands; the maintainer-only reference package scan has its own fixed package scope.
+Scope decisions are deterministic and are surfaced as a bounded verbose diagnostic with the number, reason, and relative-path examples of skipped paths. Scope diagnostics never include source contents or credential values.
 
 ## Scan resource limits
 
@@ -81,7 +81,7 @@ Normal scans use bounded defaults so an unusually large or problematic project c
 
 See `examples/ads-audit.json` for a complete editable policy file.
 
-Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. They are ignored and reported as diagnostics so beta scans continue while still surfacing policy typos.
+Unknown or malformed `maxUnity.apiAliases` entries do not fail policy loading. They are ignored and reported as diagnostics so scans continue while still surfacing policy typos.
 
 ## Report detail
 
@@ -92,6 +92,10 @@ Markdown reports are optimized for humans: they include a stable `## Readiness` 
 Readiness scoring starts at 100 and is reduced by proven failures: critical, high, and medium failures cost 20, 12, and 8 points. High warnings cost 2 points; lower-severity warnings do not reduce the score. Critical-severity warnings are normalized to high severity because warnings are advisory and are never counted as critical issues. Unknown critical/high findings cost 2 points as static-analysis limits. The score is clamped to 0 and is separate from the `--fail-on` exit-code threshold.
 
 Use `--report-detail full --include-passes` when archiving a complete evidence report.
+
+## Exit codes
+
+Exit code `0` means the scan completed below the configured failure threshold. Exit code `1` means completed findings met that threshold. Exit code `2` means invalid input/configuration or an incomplete/partial scan; check JSON `summary.isPartial` and the `SCAN_PARTIAL` diagnostic before treating the report as complete. Exit code `3` means an unexpected internal error.
 
 ## Report secret redaction
 
@@ -171,9 +175,9 @@ Valid severities are `info`, `low`, `medium`, `high`, and `critical` case-insens
 - `mintegral`
 - `pangle`
 
-If a project intentionally uses a smaller or different network set, set this list in local policy. Static evidence may come from Unity packages, EDM4U resolver files/settings, Android Gradle files, iOS pods/plists/postprocess files, or committed plugin artifacts.
+If a project intentionally uses a smaller or different network set, set this list in local policy. Static evidence may come from Unity packages, EDM4U resolver files/settings, Android Gradle files, iOS pods/plists/postprocess files, or plugin artifacts present under the supplied root.
 
-The same list also seeds the MAX `Ad Network Matrix` report section. The matrix may include additional detected networks when adapter evidence appears in committed files. It only treats Android dependencies as resolved when committed resolver evidence contains AppLovin mediation adapter artifacts such as `com.applovin.mediation:*adapter*` or `AppLovinMediation*Adapter`; third-party SDK libraries alone are not counted as MAX adapter resolution.
+The same list also seeds the MAX `Ad Network Matrix` report section. The matrix may include additional detected networks when adapter evidence appears under the supplied root. It only treats Android dependencies as resolved when resolver evidence contains AppLovin mediation adapter artifacts such as `com.applovin.mediation:*adapter*` or `AppLovinMediation*Adapter`; third-party SDK libraries alone are not counted as MAX adapter resolution.
 
 ## Analytics revenue sink mode
 
@@ -194,11 +198,11 @@ The `requirements` object controls whether selected checks are required:
 | --- | --- |
 | `consentFlow` | `MAX040` passes immediately when false; otherwise consent evidence is required when MAX use is detected. |
 | `attDescription` | `MAX013` passes immediately only when both `requirements.attDescription` and `ios.requireAttDescription` are false; otherwise ATT usage description evidence is expected. |
-| `skanIds` | `MAX014` is currently skipped by default pending the dedicated SKAN evidence model; disabling this requirement still produces a pass. |
+| `skanIds` | `MAX014` does not assess SKAdNetwork identifiers in this profile; disabling this requirement still produces a pass. |
 | `revenueTracking` | `MAX080`–`MAX082` are neutral when false and no revenue intent is visible; explicit policy true makes missing non-app-open callback evidence a warning. |
 | `qualityService` | `MAX090` always warns when quality/ad review evidence is absent; true changes the wording to a policy request. |
 | `childDirectedFlags` | `MAX044` warns when true and no age-related flag evidence is found; missing evidence remains an advisory warning even when false. |
 
-## Remote-policy-ready boundary
+## Policy limits
 
-The policy layer is designed around `IPolicyProvider` and profile policy parsers. The MVP implements embedded defaults and local JSON only. Future remote policy should remain data-only: versions, severities, required network IDs, known adapter tokens, expected analytics sinks, and platform thresholds. Remote executable rules are out of scope for the MVP.
+Only embedded defaults and local JSON policy are available in the current public package. A policy file can change supported thresholds and requirements; it cannot add executable rules, dashboard checks, network access, or runtime validation.

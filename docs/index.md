@@ -1,6 +1,6 @@
 # Documentation
 
-Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay mediation audit tool. Use this page to choose the right public guide.
+Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay mediation audit tool. The current public package is `1.0.0`; stable-release availability is announced on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases). Use this page to choose the right guide.
 
 ## Guides
 
@@ -12,7 +12,7 @@ Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay medi
 | [LevelPlay Unity Profile](levelplay-unity-profile.md) | Understand `levelplay-unity`, SDK `9.0.0+`, `LP001`-`LP040`, adapter matrix statuses, consent/privacy evidence, callback checks, production safety, and static-only limits. |
 | [Agent Contract](agent-contract.md) | Feed compact or full reports to Codex, Claude, or another coding agent safely. |
 | [JSON Report Schema](schemas/audit-report.schema.json) | Validate stable machine-readable reports in CI and agent workflows. |
-| [Artifact Verification](artifact-verification.md) | Verify release checksums and understand the public beta trust model. |
+| [Artifact Verification](artifact-verification.md) | Verify release checksums and understand download trust limitations. |
 
 ## Recommended Workflow
 
@@ -38,11 +38,11 @@ For a LevelPlay MCP scan, send the mediation/profile selection as a matching pai
 
 `mediation` and `profile` are optional and default to `max` and `max-unity`. LevelPlay requests must supply `levelplay` and `levelplay-unity` together.
 
-For LevelPlay, use the compact-first MCP workflow: call `read_report_summary` first, then request individual findings such as `LP001`-`LP040` with `get_finding`. Use `get_rule_docs` with `profile: "levelplay-unity"` when an explanation is needed. `FAIL` is an actionable static issue, `WARN` is a review signal, and `UNKNOWN` means the committed project files cannot prove the result.
+For LevelPlay, use the compact-first MCP workflow: call `read_report_summary` first, then request individual findings such as `LP001`-`LP040` with `get_finding`. Use `get_rule_docs` with `profile: "levelplay-unity"` when an explanation is needed. `FAIL` is an actionable static issue, `WARN` is a review signal, and `UNKNOWN` means files under the supplied root cannot prove the result.
 
 ## Public Scope
 
-The historical MVP was MAX-only, but the current Beta 11 supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. LevelPlay Beta 11 supports SDK `9.0.0+`; known pre-v9 versions fail validation. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification.
+The current package supports Unity projects using AppLovin MAX by default or the explicit Unity LevelPlay `levelplay-unity` profile. MAX defaults are Unity `2022.3.62f2+`, MAX plugin `8.6.0+`, and EDM4U `1.2.185+`; LevelPlay requires SDK `9.0.0+`. It does not run Unity, builds, devices, runtime logs, dashboard APIs, callback delivery, or legal compliance checks. It does inspect source-level callback wiring, load ordering, and obvious thread/UI risks. `WARN` and `UNKNOWN` findings are review prompts, not runtime certification. See the official [MAX Unity integration guide](https://developers.applovin.com/en/max/unity/overview/integration/) and [LevelPlay Unity package guide](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration) for SDK setup.
 
 ## Support
 

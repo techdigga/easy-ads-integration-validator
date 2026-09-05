@@ -1,13 +1,13 @@
 # Quickstart
 
-This walkthrough takes a Unity developer from installation to a first AppLovin MAX or Unity LevelPlay audit. For the complete public guide map and support links, see the [Documentation index](index.md) and [README](../README.md).
+This walkthrough takes a Unity developer from installation to a first AppLovin MAX or Unity LevelPlay audit. For the complete guide map and support links, see the [Documentation index](index.md) and [README](../README.md).
 
 ## 1. Install The CLI
 
-Install .NET 8, .NET 9, or .NET 10, then install the public beta:
+Install .NET 8, .NET 9, or .NET 10, then install the current public package:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 0.1.0-beta.11
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
 ```
 
 Verify the command:
@@ -51,9 +51,9 @@ The default profile is Unity AppLovin MAX. You can state it explicitly:
 easy-ads-validator scan /path/to/unity-project --platform unity --mediation max --profile max-unity
 ```
 
-The command reads committed project files only. It does not open Unity or change the project.
+The command reads supported files present under the supplied project root, including untracked or uncommitted files. It does not open Unity or change the project. Scan an intended copy of the project and review report redaction before sharing results.
 
-For Unity LevelPlay Beta 11, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
+For Unity LevelPlay, select the profile explicitly. The supported SDK floor is `9.0.0`; known pre-v9 versions fail the version rule:
 
 ```bash
 easy-ads-validator scan ./MyUnityProject --mediation levelplay --profile levelplay-unity --format markdown
@@ -119,7 +119,7 @@ Each finding has a status, severity, confidence, evidence, remediation, and limi
 | `PASS` | Expected static evidence was found. |
 | `FAIL` | Strong static evidence indicates a release-blocking problem. |
 | `WARN` | A likely issue or manual follow-up was detected. |
-| `UNKNOWN` | Available committed files cannot prove the result. |
+| `UNKNOWN` | Available files under the supplied root cannot prove the result. |
 | `INTERNAL_WARN` | The scanner reported an internal rule or infrastructure problem. |
 
 Use `--fail-on` to gate CI on failed findings at a severity threshold:
@@ -128,7 +128,7 @@ Use `--fail-on` to gate CI on failed findings at a severity threshold:
 easy-ads-validator scan "$UNITY_PROJECT" --format json --report-detail compact --fail-on high
 ```
 
-Exit code `1` means the scan completed and findings met the configured threshold. Exit code `2` means the command or input was invalid. Exit code `3` means an unexpected internal error occurred.
+Exit code `1` means the scan completed and findings met the configured threshold. Exit code `2` means input/configuration was invalid or the scan was incomplete/partial because of a limit, timeout, or cancellation. Check JSON `summary.isPartial` and the `SCAN_PARTIAL` diagnostic when present. Exit code `3` means an unexpected internal error occurred.
 
 ## 5. Tune Local Policy
 
@@ -145,14 +145,20 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 0.1.0-beta.11
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
 easy-ads-validator-mcp
 ```
 
 Register `easy-ads-validator-mcp` as a local stdio server in Codex, Claude, or another MCP client. It provides read-only scan and report tools around the CLI and does not apply fixes. See the [agent contract](agent-contract.md).
 
-## 7. Beta Limits
+## 7. Static-analysis limits
 
-The validator is a public beta. It does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.
+The current package does not run builds or runtime checks, query dashboards, prove ad serving or revenue behavior, or certify legal/privacy compliance. Review `WARN` and `UNKNOWN` findings manually and validate release behavior in the normal Unity, platform, and mediation workflows.
 
-For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside Beta 11. A `resolved` matrix row means only that committed resolver evidence was found.
+For LevelPlay, source-level initialization callback wiring, load ordering, and obvious thread/UI risks are reported, but callback delivery, runtime behavior, dashboards, generated builds, native output, and dependency resolution are outside the scanner boundary. A `resolved` matrix row means only that resolver evidence under the supplied root was found.
+
+## 8. Troubleshooting
+
+If installation succeeds but the command is unavailable, add the global tool directory to `PATH` as shown above and start a new shell. If a scan returns `UNKNOWN`, check that you supplied the Unity project root and that SDK metadata, settings, resolver files, and relevant scripts are present below it. Use `--verbose` to see bounded scope and diagnostic counts.
+
+If `summary.isPartial` is `true`, or the command exits with `2` after a timeout, cancellation, or configured scan limit, rerun with an appropriate `--limits` file and treat the first report as incomplete. For runtime, build, dashboard, or privacy questions, use the official [MAX documentation](https://developers.applovin.com/en/max/unity/overview/integration/) or [LevelPlay documentation](https://docs.unity.com/grow/levelplay/sdk/unity) and the normal Unity release workflow.
