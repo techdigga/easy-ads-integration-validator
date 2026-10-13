@@ -4,10 +4,11 @@ This walkthrough takes a Unity developer from installation to a first AppLovin M
 
 ## 1. Install The CLI
 
-Install .NET 8, .NET 9, or .NET 10, then install the current public package:
+Install .NET 8, .NET 9, or .NET 10. These commands target package `1.1.0`;
+check [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) for availability before installing:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
 ```
 
 Verify the command:
@@ -145,7 +146,7 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
 easy-ads-validator-mcp
 ```
 

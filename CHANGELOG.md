@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.1.0
+
+Release notes for Easy Ads Integration Validator 1.1.0. Availability is announced
+on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases).
+
+### Validation Accuracy
+
+- Improved Android permission provenance for MAX and LevelPlay with committed Android library manifests and bounded Unity build-hook/helper evidence. Merge directives, conditional import settings, and unresolved mutations remain review items; dependency archives and generated manifests are not treated as inspected evidence.
+- Tightened MAX and LevelPlay recovery/readiness provenance: unrelated method names no longer establish SDK behavior, bounded helper/event/scheduled load paths carry relevant evidence, and unresolved state signals stay advisory. Readiness checks match the ad ID or typed ad object and simple wrapper return paths.
+- Improved MAX and LevelPlay initialization callback ordering through bounded synchronous helpers, requiring coverage for each initialization site while preserving visible late-subscription failures and warnings for unresolved paths.
+- Narrowed MAX code-based ad-unit evidence to consumed SDK arguments, preventing unrelated format labels from causing failures; unresolved arguments remain manual-review warnings.
+- Corrected LevelPlay local-constant ad-unit detection so unrelated initialization calls and format labels do not create dynamic-value warnings. Consumed invalid IDs still fail; uncertain writes remain advisory.
+- Improved LevelPlay SDK 9+ adapter compatibility evidence and added a code-managed regression fixture for app keys, manifest modifications, and local ad-unit fallbacks.
+
+### Reports And AI Workflows
+
+- Added structured, advisory next actions and explicit trust-boundary metadata for AI consumers. Project content remains untrusted and no fixes are executed.
+- Added accepted-input byte counts to reports and bounded final performance summaries to MCP responses, with distinct partial-report completion messages.
+- Added opt-in phase progress from the CLI to MCP, with sampled elapsed-time notifications and bounded counters. Older CLIs retain elapsed-only notifications.
+- Added topic-specific official documentation links for all 40 LevelPlay rules.
+
+### Maintenance
+
+- Scoped routine CI to lightweight, change-aware checks; full verification remains a release-candidate gate.
+- Updated CLI test parallelization configuration for the current xUnit dependency.
+
+These changes do not imply that all existing project warnings disappear.
+Complex control flow, dynamic configuration, and uninspected dependency archives
+can still require manual review. Validation remains static and read-only; it does
+not prove generated-build behavior, ad serving, analytics delivery, or legal compliance.
+
+LevelPlay changes have sanitized fixture coverage; no representative real-game
+LevelPlay acceptance scan was available for this release candidate.
+
 ## 1.0.0
 
 Stable public release of Easy Ads Integration Validator.

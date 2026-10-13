@@ -1,6 +1,6 @@
 # Documentation
 
-Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay mediation audit tool. The current public package is `1.0.0`; stable-release availability is announced on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases). Use this page to choose the right guide.
+Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay mediation audit tool. This documentation targets package `1.1.0`; release availability is announced on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases). Use this page to choose the right guide.
 
 ## Guides
 

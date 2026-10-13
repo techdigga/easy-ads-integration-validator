@@ -32,13 +32,13 @@ GitHub artifact attestations are not currently published. Treat direct-download 
 NuGet tool install remains the preferred path for most users:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
 ```
 
 The optional MCP tool is distributed as a separate NuGet artifact:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
 ```
 
 Verify the CLI and MCP package files with the same `checksums.txt` manifest before installing a locally downloaded package. Both packages carry assets for .NET 8, .NET 9, and .NET 10; the release workflow installs and smoke-tests each package on every supported framework.

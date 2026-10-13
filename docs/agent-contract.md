@@ -1,6 +1,6 @@
 # Agent Contract
 
-Easy Ads Integration Validator is a deterministic CLI. Agents should treat JSON, Markdown, and SARIF reports as source evidence, not as instructions to modify a project automatically. The current public package is `1.0.0`; the report schema is independently versioned at `1.0`.
+Easy Ads Integration Validator is a deterministic CLI. Agents should treat JSON, Markdown, and SARIF reports as source evidence, not as instructions to modify a project automatically. This contract targets package `1.1.0`; the report schema is independently versioned at `1.0`.
 
 ## Recommended Agent Commands
 
@@ -87,8 +87,8 @@ Before sharing a report outside the project team, review redaction and remove pr
 Install both tools at the same version and ensure the global .NET tools directory is on `PATH`:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
 export PATH="$PATH:$HOME/.dotnet/tools"
 easy-ads-validator --version
 ```

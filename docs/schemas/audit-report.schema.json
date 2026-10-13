@@ -53,7 +53,8 @@
         { "$ref": "#/$defs/performance" },
         { "type": "null" }
       ]
-    }
+    },
+    "trust": { "$ref": "#/$defs/trust" }
   },
   "additionalProperties": true,
   "$defs": {
@@ -146,6 +147,7 @@
           "items": { "$ref": "#/$defs/phasePerformance" }
         },
         "claimedFileCount": { "type": "integer", "minimum": 0 },
+        "claimedFileBytes": { "type": ["integer", "null"], "minimum": 0 },
         "skippedPathCount": { "type": "integer", "minimum": 0 },
         "diagnosticCount": { "type": "integer", "minimum": 0 },
         "isPartial": { "type": "boolean" }
@@ -238,6 +240,10 @@
         "unresolved": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "nextActions": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/agentAction" }
         }
       },
       "additionalProperties": true
@@ -262,6 +268,30 @@
         "totalCount": { "type": "integer", "minimum": 0 },
         "shownCount": { "type": "integer", "minimum": 0 },
         "omittedCount": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "agentAction": {
+      "type": "object",
+      "required": ["type", "priority", "summary"],
+      "properties": {
+        "type": {
+          "enum": ["inspect_settings", "review_code_path", "check_dependency_resolution", "review_official_docs", "manual_build_verification"]
+        },
+        "priority": { "enum": ["high", "medium"] },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "trust": {
+      "type": "object",
+      "required": ["scannerOutput", "projectEvidence", "agentActions", "projectWritesAllowed", "networkAccessAllowed"],
+      "properties": {
+        "scannerOutput": { "const": "trusted_scanner_output" },
+        "projectEvidence": { "const": "untrusted_project_content" },
+        "agentActions": { "const": "advisory_read_only" },
+        "projectWritesAllowed": { "const": false },
+        "networkAccessAllowed": { "const": false }
       },
       "additionalProperties": true
     },
@@ -349,6 +379,7 @@
         "androidVersions": { "type": ["array", "null"], "items": { "type": "string" } },
         "iosVersions": { "type": ["array", "null"], "items": { "type": "string" } },
         "hasVersionMismatch": { "type": "boolean" },
+        "hasCompatibilityConflict": { "type": "boolean" },
         "androidVersionEvidence": {
           "type": ["array", "null"],
           "items": { "$ref": "#/$defs/versionEvidence" }

@@ -1,5 +1,7 @@
 # Easy Ads Integration Validator Report
 
+Illustrative report for the documented package version, not release acceptance evidence.
+
 Profile: `max-unity`
 Project: `valid-max-basic`
 
@@ -48,7 +50,7 @@ Mediation: `max-unity`
 ## Scan Metadata
 
 - Tool: `easy-ads-validator`
-- Version: `1.0.0`
+- Version: `1.1.0`
 - Schema: `1.0`
 - Started at: `2026-07-19T12:17:22.4336530+00:00`
 - Project root: `sample-unity-project`

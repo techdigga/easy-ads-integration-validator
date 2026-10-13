@@ -16,7 +16,7 @@ Easy Ads Integration Validator is a local, read-only static analysis tool for Un
 
 ## What It Validates
 
-The stable package is `1.0.0`. Both supported mediation profiles cover their platform-specific setup while sharing the same report format and static-analysis boundaries.
+This documentation targets package `1.1.0`; check [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) for availability. Both supported mediation profiles cover their platform-specific setup while sharing the same report format and static-analysis boundaries.
 
 | Area | Coverage examples |
 | --- | --- |
@@ -91,14 +91,14 @@ The validator does not modify Unity projects automatically.
 Install .NET 8, .NET 9, or .NET 10, then install the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
 ```
 
 Verify, update, or remove it:
 
 ```bash
 easy-ads-validator --version
-dotnet tool update --global EasyAdsIntegrationValidator --version 1.0.0
+dotnet tool update --global EasyAdsIntegrationValidator --version 1.1.0
 dotnet tool uninstall --global EasyAdsIntegrationValidator
 ```
 
@@ -172,7 +172,7 @@ easy-ads-validator scan "$UNITY_PROJECT" --format json --report-detail compact -
 Install the optional MCP server at the same version:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.0.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
 easy-ads-validator-mcp
 ```
 

@@ -109,6 +109,14 @@ The stable machine-readable contract is published as [`audit-report.schema.json`
 
 The optional `performance` object reports `totalDurationMs`, ordered phase durations, `claimedFileCount`, `skippedPathCount`, `diagnosticCount`, and `isPartial`. The duration ends at report preparation; writing the final report files is not included. These values help identify slow or incomplete scans without exposing source contents or credentials.
 
+`performance.claimedFileBytes` reports the summed size of unique files accepted
+by the scan budget, measured at first acceptance. Repeated claims are counted
+once; missing, unreadable-metadata, oversized, and file-count-rejected paths add
+no bytes. The total is retained in partial reports. It measures accepted input
+size, not successful parsing, actual disk I/O, memory use, or the size of the
+whole project. Readers that bypass the budget are not included. Older reports
+may omit this field; `null` means the counter was unavailable.
+
 The current schema version is `1.0`. Consumers should accept the same major version, ignore unknown additive fields, and fail closed or request migration guidance for an unknown major version. Breaking field or meaning changes increment the major version; additive compatible fields may increment the minor version. The `schemaVersion` field is independent from the CLI package version and mediation SDK versions.
 
 Agent triage command:

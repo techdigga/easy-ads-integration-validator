@@ -2,10 +2,12 @@
 
 ## Supported Versions
 
-Easy Ads Integration Validator supports security fixes for the current stable release.
+Easy Ads Integration Validator supports security fixes for the versions below.
+The `1.1.x` line enters stable support when its release is published.
 
 | Version | Supported |
 | --- | --- |
+| `1.1.x` | Yes |
 | `1.0.x` | Yes |
 | Older versions | No |
 
