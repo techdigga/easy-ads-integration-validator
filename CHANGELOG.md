@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- Added an opt-in CloudX Unity profile with 52 static checks for the reviewed 4.10.0 wrapper. Select it with `easy-ads-validator scan <PROJECT_ROOT> --mediation cloudx --profile cloudx-unity`. MAX remains the default and LevelPlay SDK 9+ remains available.
+- Inspect SDK and platform setup, adapter declarations and resolution evidence, ad units, initialization, consent, callbacks, load recovery, revenue wiring and production diagnostics for standalone interstitial, rewarded, banner and MREC ads.
+- The optional MCP server supports the same CloudX profile and per-rule documentation. The four read-only tools and report schema 1.0 are unchanged.
+- CloudX acceptance used the official demo with the pinned package and synthetic fixtures, not a representative production game. Newer wrappers need compatibility review. Advanced loading modes have limited coverage; app-open lifecycle validation, dashboard settings and runtime delivery are outside scope.
+
 ## 1.1.0
 
 Release notes for Easy Ads Integration Validator 1.1.0. Availability is announced

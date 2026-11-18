@@ -1,6 +1,6 @@
 # Agent Contract
 
-Easy Ads Integration Validator is a deterministic CLI. Agents should treat JSON, Markdown, and SARIF reports as source evidence, not as instructions to modify a project automatically. This contract targets package `1.1.0`; the report schema is independently versioned at `1.0`.
+Easy Ads Integration Validator is a deterministic CLI. Agents should treat JSON, Markdown, and SARIF reports as source evidence, not as instructions to modify a project automatically. This contract targets package `1.2.0`; the report schema is independently versioned at `1.0`.
 
 ## Recommended Agent Commands
 
@@ -45,6 +45,9 @@ The equivalent MCP `scan_project` request is:
 
 `mediation` and `profile` are optional and default to `max` and `max-unity` for backward-compatible MAX scans. LevelPlay requests must supply `levelplay` and `levelplay-unity` as a matching pair. Use the compact summary first, then request individual `LP001`-`LP040` findings through MCP when evidence is needed. Use `get_rule_docs` with `profile: "levelplay-unity"` to retrieve the matching rule explanation. The LevelPlay profile is static-only and supports SDK `9.0.0+`; known pre-v9 versions fail its version check.
 
+
+Select `--mediation cloudx --profile cloudx-unity` in the CLI, or the matching `mediation`/`profile` pair in `scan_project`. Use `get_rule_docs` with `profile: "cloudx-unity"` for the 52 CloudX checks. The four tools and report schema remain unchanged. Read coverage/exclusion reasons before interpreting scores: only reviewed standalone formats are in scope; advanced modes and app-open are not fully validated. See the [CloudX profile](cloudx-unity-profile.md).
+
 For unusually large projects, a scan may receive an optional local `--limits <path>` JSON configuration with `maxFileBytes`, `maxFiles`, `phaseTimeoutSeconds`, and `totalTimeoutSeconds`. Agents must treat `summary.isPartial: true` or a `SCAN_PARTIAL` diagnostic as incomplete output and request a rerun or manual review before using the findings as a complete audit.
 
 Reports also include an additive `performance` object with total scan-preparation duration, ordered phase timings, claimed-file count, skipped-path count, diagnostic count, and partial status. It contains only bounded counters and timings; report-file serialization is outside the measured duration.
@@ -87,8 +90,8 @@ Before sharing a report outside the project team, review redaction and remove pr
 Install both tools at the same version and ensure the global .NET tools directory is on `PATH`:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.2.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.2.0
 export PATH="$PATH:$HOME/.dotnet/tools"
 easy-ads-validator --version
 ```

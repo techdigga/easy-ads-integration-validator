@@ -4,11 +4,11 @@ This walkthrough takes a Unity developer from installation to a first AppLovin M
 
 ## 1. Install The CLI
 
-Install .NET 8, .NET 9, or .NET 10. These commands target package `1.1.0`;
+Install .NET 8, .NET 9, or .NET 10. These commands target package `1.2.0`;
 check [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) for availability before installing:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.2.0
 ```
 
 Verify the command:
@@ -62,6 +62,14 @@ easy-ads-validator scan ./MyUnityProject --profile levelplay-unity --format json
 ```
 
 LevelPlay recognizes direct imports under `Assets/LevelPlay` and legacy-compatible `Assets/IronSource`, plus UPM package IDs `com.unity.services.levelplay` and legacy `com.ironsource.mediation`. It checks `LP001`-`LP040`, including initialization, source-level callback/load ordering, consent, privacy URL, ATT ownership, audience-signal evidence, duplicate or unsupported callback subscriptions, revenue forwarding, and production-safety review. See the [Unity LevelPlay package integration guide](https://docs.unity.com/en-us/grow/levelplay/sdk/unity/package-integration).
+
+For CloudX:
+
+```bash
+easy-ads-validator scan ./MyUnityProject --mediation cloudx --profile cloudx-unity --format json --report-detail compact
+```
+
+The [CloudX profile](cloudx-unity-profile.md) covers reviewed wrapper 4.10.0 semantics for standalone interstitial, rewarded, banner, and MREC. Newer versions and advanced loading modes retain compatibility/coverage review notices. Use the same matching pair in MCP requests; MAX remains the default.
 
 ## 3. Choose Report Output
 
@@ -146,7 +154,7 @@ Policy can adjust supported thresholds, required networks, severity overrides, a
 Install the optional MCP package at the same version as the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.2.0
 easy-ads-validator-mcp
 ```
 

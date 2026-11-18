@@ -1,6 +1,6 @@
 # Documentation
 
-Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay mediation audit tool. This documentation targets package `1.1.0`; release availability is announced on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases). Use this page to choose the right guide.
+Easy Ads Integration Validator is a static Unity AppLovin MAX, LevelPlay, and CloudX mediation audit tool. This documentation targets package `1.2.0`; release availability is announced on [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases). Use this page to choose the right guide.
 
 ## Guides
 
@@ -10,6 +10,7 @@ Easy Ads Integration Validator is a static Unity AppLovin MAX and LevelPlay medi
 | [Configuration](configuration.md) | Customize supported policy thresholds, required networks, aliases, and report detail. |
 | [MAX Unity Profile](max-unity-profile.md) | Understand the validation areas, evidence, statuses, and static-analysis limits. |
 | [LevelPlay Unity Profile](levelplay-unity-profile.md) | Understand `levelplay-unity`, SDK `9.0.0+`, `LP001`-`LP040`, adapter matrix statuses, consent/privacy evidence, callback checks, production safety, and static-only limits. |
+| [CloudX Unity Profile](cloudx-unity-profile.md) | Review 4.10.0 SDK evidence, 52 checks, matrices, standalone formats, and explicit advanced-mode limits. |
 | [Agent Contract](agent-contract.md) | Feed compact or full reports to Codex, Claude, or another coding agent safely. |
 | [JSON Report Schema](schemas/audit-report.schema.json) | Validate stable machine-readable reports in CI and agent workflows. |
 | [Artifact Verification](artifact-verification.md) | Verify release checksums and understand download trust limitations. |
@@ -39,6 +40,9 @@ For a LevelPlay MCP scan, send the mediation/profile selection as a matching pai
 `mediation` and `profile` are optional and default to `max` and `max-unity`. LevelPlay requests must supply `levelplay` and `levelplay-unity` together.
 
 For LevelPlay, use the compact-first MCP workflow: call `read_report_summary` first, then request individual findings such as `LP001`-`LP040` with `get_finding`. Use `get_rule_docs` with `profile: "levelplay-unity"` when an explanation is needed. `FAIL` is an actionable static issue, `WARN` is a review signal, and `UNKNOWN` means files under the supplied root cannot prove the result.
+
+
+For CloudX-enabled builds, use `mediation: "cloudx"` with `profile: "cloudx-unity"`, then the same four MCP tools. Read coverage/exclusions as well as findings; advanced arbitration and unsupported formats are not fully validated. Use `get_rule_docs` with the CloudX profile for individual `CX` rule explanations.
 
 ## Public Scope
 

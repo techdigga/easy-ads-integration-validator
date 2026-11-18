@@ -2,6 +2,30 @@
 
 The current public package supports embedded default policy plus an optional local JSON policy passed with `--policy <path>`. Local policy values override defaults. YAML and remote policy loading are not available. Select `levelplay-unity` with `--mediation levelplay --profile levelplay-unity` for LevelPlay SDK `9.0.0+` scans; the default remains `max-unity`. MAX-specific policy values under `maxUnity` apply only to MAX scans.
 
+## CloudX Policy
+
+Version 1.2.0 accepts `--mediation cloudx --profile cloudx-unity` and a local `cloudXUnity` section. Other mediation sections do not configure CloudX.
+
+```json
+{
+  "cloudXUnity": {
+    "minimumSdkVersion": "4.10.0",
+    "minimumEdmVersion": "1.2.185",
+    "minimumUnityVersion": "2022.3.62f2",
+    "minimumAndroidApi": 24,
+    "targetAndroidApiAtLeast": 36,
+    "minimumIosDeploymentTarget": "13.0",
+    "recommendedIosDeploymentTarget": "15.0",
+    "reviewConsentOwnership": true,
+    "analyticsRevenueSinks": "auto",
+    "recommendDiagnosticEntryPoint": false,
+    "recommendOptionalCallbacks": false
+  }
+}
+```
+
+Protected minimums cannot be lowered by local policy. Invalid values emit diagnostics and fall back to defaults. Network recommendation lists default to empty and are platform-specific (`recommendedNetworksAndroid` and `recommendedNetworksIos`); absence is advisory, not a required-network failure. Privacy intent remains review-only. Policy does not expand the reviewed SDK/API or advanced-mode support boundary. See the [CloudX profile](cloudx-unity-profile.md).
+
 ## Scan scope
 
 Scans use a bounded default scope. Supported files present under the supplied Unity project root are eligible, including untracked or uncommitted files. Generated Unity directories (`Library`, `Temp`, `Obj`, `Build`, `Builds`, `Logs`, `UserSettings`, and `.git`) and bulky content directories such as `Art`, `Audio`, `Models`, `Prefabs`, `Textures`, and `Videos` are skipped during recursive source and asset-settings enumeration. Required project settings and mediation SDK evidence paths remain explicitly inspected by their readers. Scan an intended copy of the project and review redaction before sharing reports.

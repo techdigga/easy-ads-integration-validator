@@ -2,7 +2,7 @@
 
 ### Find Unity mediation gaps before they become build failures, lost revenue, or release surprises.
 
-Easy Ads Integration Validator is a local, read-only static analysis tool for Unity game development teams using AppLovin MAX or Unity LevelPlay ad mediation. It checks the project files under a supplied Unity project root and produces evidence-based reports for developers, CI, Codex, Claude, and compatible coding agents.
+Easy Ads Integration Validator is a local, read-only static analysis tool for Unity game development teams using AppLovin MAX, Unity LevelPlay, or CloudX ad mediation. It checks the project files under a supplied Unity project root and produces evidence-based reports for developers, CI, Codex, Claude, and compatible coding agents.
 
 **One scan. Clear evidence. Faster fixes.**
 
@@ -16,7 +16,7 @@ Easy Ads Integration Validator is a local, read-only static analysis tool for Un
 
 ## What It Validates
 
-This documentation targets package `1.1.0`; check [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) for availability. Both supported mediation profiles cover their platform-specific setup while sharing the same report format and static-analysis boundaries.
+Version `1.2.0` adds CloudX to the MAX and LevelPlay profiles. CloudX was checked on the official demo and synthetic fixtures, not a representative production game. Check [GitHub Releases](https://github.com/techdigga/easy-ads-integration-validator/releases) for availability. All profiles share the same report format and static-analysis boundaries, with profile-specific coverage.
 
 | Area | Coverage examples |
 | --- | --- |
@@ -56,6 +56,18 @@ LevelPlay validation covers direct or UPM installation, SDK version, settings, p
 
 Details: [LevelPlay Unity profile](docs/levelplay-unity-profile.md).
 
+### CloudX
+
+The CloudX profile starts with reviewed Unity wrapper `4.10.0` semantics. Older versions are unsupported; newer versions need compatibility review.
+
+```bash
+easy-ads-validator scan /path/to/unity-project --mediation cloudx --profile cloudx-unity
+```
+
+CloudX validation covers SDK and platform setup, keys, ad units, initialization, privacy, adapters, dependencies, callbacks, recovery, revenue, and production safety for standalone interstitial, rewarded, banner, and MREC flows. Advanced arbitration and unsupported formats retain explicit coverage limits.
+
+Details: [CloudX Unity profile](docs/cloudx-unity-profile.md).
+
 ## Supported Versions
 
 | Component | Default policy floor |
@@ -65,8 +77,9 @@ Details: [LevelPlay Unity profile](docs/levelplay-unity-profile.md).
 | AppLovin MAX Unity plugin | `8.6.0` or newer |
 | External Dependency Manager for Unity | `1.2.185` or newer when MAX evidence is present |
 | Unity LevelPlay SDK | `9.0.0` or newer |
+| CloudX Unity wrapper | `4.10.0` reviewed; newer versions require compatibility review |
 
-These are validator policy floors, not guarantees about every SDK/platform combination. Confirm compatibility in the official [MAX Unity documentation](https://developers.applovin.com/en/max/unity/overview/integration/) and [LevelPlay Unity documentation](https://docs.unity.com/grow/levelplay/sdk/unity).
+These are validator policy floors, not guarantees about every SDK/platform combination. Confirm compatibility in the official [MAX Unity documentation](https://developers.applovin.com/en/max/unity/overview/integration/), [LevelPlay Unity documentation](https://docs.unity.com/grow/levelplay/sdk/unity), and [CloudX Unity documentation](https://docs.cloudx.io/en/unity/integration).
 
 ## AI-Friendly By Design
 
@@ -91,14 +104,14 @@ The validator does not modify Unity projects automatically.
 Install .NET 8, .NET 9, or .NET 10, then install the CLI:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator --version 1.2.0
 ```
 
 Verify, update, or remove it:
 
 ```bash
 easy-ads-validator --version
-dotnet tool update --global EasyAdsIntegrationValidator --version 1.1.0
+dotnet tool update --global EasyAdsIntegrationValidator --version 1.2.0
 dotnet tool uninstall --global EasyAdsIntegrationValidator
 ```
 
@@ -172,7 +185,7 @@ easy-ads-validator scan "$UNITY_PROJECT" --format json --report-detail compact -
 Install the optional MCP server at the same version:
 
 ```bash
-dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.1.0
+dotnet tool install --global EasyAdsIntegrationValidator.Mcp --version 1.2.0
 easy-ads-validator-mcp
 ```
 
@@ -208,13 +221,14 @@ This is static repository inspection, not build or runtime certification. It doe
 - [Configuration](docs/configuration.md)
 - [MAX Unity profile](docs/max-unity-profile.md)
 - [LevelPlay Unity profile](docs/levelplay-unity-profile.md)
+- [CloudX Unity profile](docs/cloudx-unity-profile.md)
 - [MCP agent contract](docs/agent-contract.md)
 - [Artifact verification](docs/artifact-verification.md)
 
 ## Troubleshooting
 
 - **Command not found:** add `$HOME/.dotnet/tools` on macOS/Linux or `%USERPROFILE%\\.dotnet\\tools` on Windows to `PATH`, then open a new shell.
-- **Unsupported profile:** use `max/max-unity` or `levelplay/levelplay-unity`; LevelPlay requires both values together.
+- **Unsupported profile:** use matching pairs `max/max-unity`, `levelplay/levelplay-unity`, or `cloudx/cloudx-unity`.
 - **Unexpected `UNKNOWN` results:** confirm the supplied path is the Unity project root and that SDK, settings, resolver, and integration files are present below it.
 - **Partial scan:** review `summary.isPartial`, then rerun with appropriate scan limits before using the result as a gate.
 - **Remaining runtime or build issue:** use the normal Unity, platform, mediation, and dashboard workflows; this CLI cannot perform those checks.
